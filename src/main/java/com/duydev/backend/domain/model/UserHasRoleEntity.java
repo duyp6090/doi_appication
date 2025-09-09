@@ -1,0 +1,29 @@
+package com.duydev.backend.domain.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "tbl_user_has_role")
+public class UserHasRoleEntity extends AbstractEntity<Long> {
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private RoleEntity role;
+    
+}

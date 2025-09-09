@@ -17,3 +17,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+jwt:
+  access-key: QdBccidLA5iOv0k8ZQVGNi1LwOfQUYPh/pBbPfKrf1Q=
+  refresh-key: Grr8fPGMfbWhHy/MARh5Tv3Cg5YkMX39UFqC3PZ6D74=
+  access-expired: 7200000 #  2h
+  refresh-expired: 604800000 # 7 days
