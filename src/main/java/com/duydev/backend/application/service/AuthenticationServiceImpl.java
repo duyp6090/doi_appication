@@ -1,5 +1,6 @@
 package com.duydev.backend.application.service;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,6 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.AuthorizationCodeOAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Service;
 
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
@@ -38,6 +43,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final TokenRepository tokenRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Override
     public ResponseDto<ResponseTokenDto> login(String username, String password) {
@@ -149,13 +156,45 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public ResponseDto<String> register(RequestRegisterDto requestRegisterDto) {
-        // TODO Auto-generated method stub
+
         throw new UnsupportedOperationException("Unimplemented method 'register'");
     }
 
     @Override
     public ResponseDto<String> changePassword(String username, String oldPassword, String newPassword) {
-        // TODO Auto-generated method stub
+
         throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    }
+
+    @Override
+    public ResponseDto<String> requestSocial(HttpServletRequest request, String provider) {
+        // Format provider
+        provider = provider.trim().toLowerCase();
+
+        // Get ClientRegistration
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(provider);
+        if (clientRegistration == null) throw new AppException(EnumException.OAUTH2_CLIENT_NOT_FOUND);
+
+        // Create OAuth2AuthorizationRequest
+        OAuth2AuthorizationRequest authRequest = OAuth2AuthorizationRequest
+            .authorizationCode()
+            .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+            .clientId(clientRegistration.getClientId())
+            .redirectUri(clientRegistration.getRedirectUri())
+            .scopes(clientRegistration.getScopes())
+            .state(UUID.randomUUID().toString())
+            .build(); 
+
+
+        return ResponseDto.<String>builder()
+            .data(authRequest.getAuthorizationRequestUri())
+            .message(List.of("Request social url successfully"))
+            .status(EnumException.SUCCESS.getStatusCode())
+            .build();
+    }
+
+    @Override
+    public ResponseDto<ResponseTokenDto> loginSocial(String code, String provider) {
+        throw new UnsupportedOperationException("Unimplemented method 'loginSocial'");
     }
 }

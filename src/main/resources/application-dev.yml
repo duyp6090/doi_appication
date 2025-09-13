@@ -5,9 +5,9 @@ spring:
   devtools:
     add-properties: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/mobile
-    username: postgres
-    password: 123456
+    url: jdbc:postgresql://${DB_HOST:localhost}:${PORT_DB}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -17,8 +17,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${BASE_URL}/auth/google/callback
+            scope:
+              - email
+              - profile
 jwt:
-  access-key: QdBccidLA5iOv0k8ZQVGNi1LwOfQUYPh/pBbPfKrf1Q=
-  refresh-key: Grr8fPGMfbWhHy/MARh5Tv3Cg5YkMX39UFqC3PZ6D74=
+  access-key: ${JWT_ACCESS_KEY}
+  refresh-key: ${JWT_REFRESH_KEY}
   access-expired: 7200000 #  2h
   refresh-expired: 604800000 # 7 days

@@ -4,16 +4,23 @@ import lombok.Getter;
 
 @Getter
 public enum EnumException {
+    // Define common enum exceptions
     NOT_FOUND(404, "Resource not found"),
     INTERNAL_ERROR(500, "Internal server error"),
-    INVALID_INPUT(400, "Invalid input"),
-    INVALID_USERNAME_PASSWORD(401, "Invalid username or password"),
     SUCCESS(200, "Success"),
+    BAD_REQUEST(400, "Bad request"),
+
+    // Define enum exception for authentication/authorization
     TOKEN_IN_VALID(400, "Token is invalid"),
-    TOKEN_NOT_FOUND(400, "Token not found"),
+    TOKEN_NOT_FOUND(404, "Token not found"),
     UNAUTHORIZED(401, "Unauthorized"),
     FORBIDDEN(403, "Forbidden"),
-    BAD_REQUEST(400, "Bad request");
+
+    // Define enum exception for login social
+    OAUTH2_CLIENT_NOT_FOUND(404, "OAuth2 client not found"),
+
+    // Define enum exception for user
+    INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
     private int statusCode;
     private String message;

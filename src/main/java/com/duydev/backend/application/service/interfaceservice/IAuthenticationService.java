@@ -16,4 +16,8 @@ public interface IAuthenticationService {
     public ResponseDto<ResponseTokenDto> refreshToken(HttpServletRequest request);
 
     public ResponseDto<String> logout(HttpServletRequest request);
+
+    public ResponseDto<String> requestSocial(HttpServletRequest request, String provider);
+
+    public ResponseDto<ResponseTokenDto> loginSocial(String code, String provider);
 }
