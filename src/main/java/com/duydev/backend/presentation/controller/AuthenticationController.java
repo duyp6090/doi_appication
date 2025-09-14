@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
 import com.duydev.backend.presentation.dto.request.RequestLoginDto;
+import com.duydev.backend.presentation.dto.request.RequestRegisterDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseTokenDto;
 
@@ -38,9 +39,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String register() {
-        return "Register successfully";
-    } 
+    public ResponseEntity<ResponseDto<String>> register(
+        @RequestBody RequestRegisterDto requestRegisterDto
+    ) {
+        ResponseDto<String> response = authenticationService.register(requestRegisterDto);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/forgot-password")
     public String forgotPassword() {
@@ -56,7 +60,6 @@ public class AuthenticationController {
     public ResponseEntity<ResponseDto<ResponseTokenDto>> refreshToken(HttpServletRequest request) {
         ResponseDto<ResponseTokenDto> response = authenticationService.refreshToken(request);
         return ResponseEntity.ok(response);
-        
     }
 
     @PostMapping("/logout")

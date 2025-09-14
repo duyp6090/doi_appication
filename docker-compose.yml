@@ -7,6 +7,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: mobile
+      TZ: UTC
     ports:
       - "5432:5432"
     volumes:
@@ -14,7 +15,7 @@ services:
       - ./initDB:/docker-entrypoint-initdb.d
     networks:
       - backend-network
-  
+
   redis:
     image: redis:latest
     container_name: redis

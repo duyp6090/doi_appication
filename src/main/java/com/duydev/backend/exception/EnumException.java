@@ -20,6 +20,7 @@ public enum EnumException {
     OAUTH2_CLIENT_NOT_FOUND(404, "OAuth2 client not found"),
 
     // Define enum exception for user
+    USERNAME_EXIST(400, "Username already exists"),
     INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
     private int statusCode;

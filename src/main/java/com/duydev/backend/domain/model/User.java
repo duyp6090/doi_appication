@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,12 +50,14 @@ public class User extends AbstractEntity<Long> implements UserDetails  {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "type_user")
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_user", columnDefinition = "user_role")
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private TypeUser typeUser;
 
-    @Column(name = "status_user")
     @Enumerated(EnumType.STRING)
+    @Column(name = "status_user", columnDefinition = "user_status")
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private StatusUser statusUser;
 
     @OneToMany(mappedBy = "user")

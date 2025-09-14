@@ -45,7 +45,6 @@ public class CustomeFilterJwt extends OncePerRequestFilter {
             User userDetails = customeUserDetailsService.loadUserByUsername(username);
 
             // Valid token
-            
             boolean isvalidToken = (userDetails != null) && (!jwtUtil.isTokenExpired(token, TypeKey.ACESSTOKEN));
 
             if(!isvalidToken){

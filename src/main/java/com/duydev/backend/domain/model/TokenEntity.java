@@ -1,7 +1,7 @@
 package com.duydev.backend.domain.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +17,12 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_token")
 public class TokenEntity extends AbstractEntity<Long> {
-    @JoinColumn(name = "access_token")
+    @Column(name = "access_token")
     private String accessToken;
 
-    @JoinColumn(name = "refresh_token")
+    @Column(name = "refresh_token")
     private String refreshToken;
 
-    @JoinColumn(name = "user_name")
+    @Column(name = "user_name")
     private String username;
 }

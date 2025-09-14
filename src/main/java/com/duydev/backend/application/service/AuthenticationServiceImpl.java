@@ -28,9 +28,11 @@ import com.duydev.backend.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "AUTHEN SERVICE")
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private final AuthenticationManager authenticationManager;
@@ -70,12 +72,19 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         String refreshToken = jwtUtils.generateToken(TypeKey.REFRESHTOKEN, authorities, userDetails.getUsername());
 
         // Save token to db
-        tokenRepository.save(TokenEntity.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .username(userDetails.getUsername())
-            .build()
-        );
+        TokenEntity token = tokenRepository.findByUsername(userDetails.getUsername());
+        if (token != null) {
+            token.setAccessToken(accessToken);
+            token.setRefreshToken(refreshToken);
+        }
+        else {
+            token = TokenEntity.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .username(userDetails.getUsername())
+                .build();
+        }
+        tokenRepository.save(token);
 
         // Create response
         ResponseTokenDto responseTokenDto = ResponseTokenDto.builder()
@@ -155,13 +164,29 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public ResponseDto<String> register(RequestRegisterDto requestRegisterDto) {
+        // Check exist username
+        User userOld = userRepository.findByUsername(requestRegisterDto.getUsername());
+        if (userOld != null) {
+            throw new AppException(EnumException.USERNAME_EXIST);
+        }
 
-        throw new UnsupportedOperationException("Unimplemented method 'register'");
+        // Register user
+        User newUser = User.builder()
+            .username(requestRegisterDto.getUsername())
+            .password(passwordEncoder.encode(requestRegisterDto.getPassword()))
+            .build();
+
+        userRepository.save(newUser);
+
+        // Return response
+        return ResponseDto.<String>builder()
+            .message(List.of("Register successfully"))
+            .status(EnumException.SUCCESS.getStatusCode())
+            .build();
     }
 
     @Override
     public ResponseDto<String> changePassword(String username, String oldPassword, String newPassword) {
-
         throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
     }
 
