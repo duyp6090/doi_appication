@@ -2,6 +2,7 @@ package com.duydev.backend.domain.model;
 
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_role")
 public class RoleEntity extends AbstractEntity<Integer> {
+    @Column(name = "role_name")
     private String name;
 
     @OneToMany(mappedBy = "role")
