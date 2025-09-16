@@ -1,4 +1,14 @@
 services:
+  backend:
+    image: ghcr.io/duyp6090/doi_appication:latest
+    container_name: backend_carhub
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - $PORT:$PORT
+    networks:
+      - backend-network
   db:
     image: postgres:latest
     container_name: postgres

@@ -1,0 +1,97 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches: ["staging", "product"]
+  pull_request:
+    branches: ["staging", "product"]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: Pull code to ubuntu-latest
+        uses: actions/checkout@v4
+
+      # Login registry github
+      - name: Login to Registry github
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor}}
+          password: ${{ secrets.GITHUB_TOKEN}}
+
+      # Build metadata for images
+      - name: Create metadata for images
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository}}
+          tags: |
+            type=sha,
+            type=raw,value=latest
+
+      # Set up docker buildx
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      #  Build and push images
+      - name: Build and push to github registry
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.metadata.outpus.tags}}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha,
+          cache-to: type=gha, mode=max
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: Pull code to ubuntu-latest
+        uses: actions/checkout@v4
+
+      # Create file env
+      - name: Create file env
+        run: |
+          echo "Build env file"
+          echo "${{ secrets.STAGING_ENV}}" > .env
+
+      # Copy file env and docker-compose to server
+      - name: SCP file env and docker-compose to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.STAGING_SERVER}}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: $${{ secrets.STAGING_SHH_KEY }}
+          source: ".env,docker-compose-staging.yaml"
+          target: ~/carhub
+
+      # Deploy to server
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGING_SERVER}}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: $${{ secrets.STAGING_SHH_KEY }}
+          script: |
+            cd ~/carhub
+
+            echo "Login github registry"
+            docker login ghcr.io -u ${{ github.actor}} -p ${{ secrets.GITHUB_TOKEN}}
+
+            echo "Pull image backend carhub"
+            docker pull ghcr.io/${{ github.repository}}:latest
+
+            echo "Run docker-compose"
+            docker-compose -f docker-compose-staging.yaml up -d --remove-orphans --force-recreate
+
+            echo "Clean up"
+            docker image prune -f 
+
+            echo "Deployed successfully"
+
+            exit 0
