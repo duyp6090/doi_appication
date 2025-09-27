@@ -2,6 +2,7 @@ services:
   backend:
     image: ghcr.io/duyp6090/doi_appication:latest
     container_name: backend_carhub
+    hostname: backend_carhub
     restart: always
     env_file:
       - .env
@@ -12,6 +13,7 @@ services:
   db:
     image: postgres:latest
     container_name: postgres
+    hostname: postgres
     restart: always
     environment:
       POSTGRES_USER: $DB_USER
@@ -31,6 +33,7 @@ services:
   redis:
     image: redis:latest
     container_name: redis
+    hostname: redis
     restart: always
     ports:
       - "6379:6379"

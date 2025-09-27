@@ -9,6 +9,7 @@ public enum EnumException {
     INTERNAL_ERROR(500, "Internal server error"),
     SUCCESS(200, "Success"),
     BAD_REQUEST(400, "Bad request"),
+    UPLOAD_FILE_ERROR(500, "Upload file error"),
 
     // Define enum exception for authentication/authorization
     TOKEN_IN_VALID(400, "Token is invalid"),

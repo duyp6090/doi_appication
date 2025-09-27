@@ -19,9 +19,24 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
+        "[format_sql]": true
         jdbc:
-          time_zone: UTC
+          "[time_zone]": UTC
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${PORT_REDIS:6379}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${PORT_RABBITMQ:5672}
+    username: ${RABBITMQ_USER:user}
+    password: ${RABBITMQ_PASSWORD:password}
 
   security:
     oauth2:
@@ -39,3 +54,8 @@ jwt:
   refresh-key: ${JWT_REFRESH_KEY}
   access-expired: 7200000 #  2h
   refresh-expired: 604800000 # 7 days
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_KEY}
+  api-secret: ${CLOUDINARY_SECRET}
