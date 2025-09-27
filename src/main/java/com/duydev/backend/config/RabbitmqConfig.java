@@ -30,7 +30,7 @@ public class RabbitmqConfig {
     // 1. Build exchange, queue, binding for handle dead request rental
     @Bean 
     public DirectExchange directExchange(){
-        return new DirectExchange(DLX_EXCHANGE_NAME);
+        return new DirectExchange(DLX_EXCHANGE_NAME, true, false);
     }
 
     @Bean
@@ -49,7 +49,7 @@ public class RabbitmqConfig {
     // 2. Build exchange, queue, binding for handle main request rental
     @Bean
     public DirectExchange mainDirectExchange(){
-        return new DirectExchange(MAIN_EXCHANGE_NAME);
+        return new DirectExchange(MAIN_EXCHANGE_NAME, true, false);
     }
 
     @Bean

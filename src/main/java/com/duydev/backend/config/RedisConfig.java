@@ -12,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "RedisConfig")
 @Configuration
 public class RedisConfig {
-    @Value("${data.redis.host}")
+    @Value("${spring.data.redis.host}")
     String host;
 
-    @Value("${data.redis.port}")
+    @Value("${spring.data.redis.port}")
     int port;
 
     @Bean
