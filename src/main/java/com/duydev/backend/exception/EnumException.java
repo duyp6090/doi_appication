@@ -5,10 +5,13 @@ import lombok.Getter;
 @Getter
 public enum EnumException {
     // Define common enum exceptions
+    SUCCESS(200, "Success"),
     NOT_FOUND(404, "Resource not found"),
     INTERNAL_ERROR(500, "Internal server error"),
-    SUCCESS(200, "Success"),
     BAD_REQUEST(400, "Bad request"),
+
+    // Cloudinary service exceptions
+    DELETE_FILE_ERROR(500, "Delete file error"),
     UPLOAD_FILE_ERROR(500, "Upload file error"),
 
     // Define enum exception for authentication/authorization

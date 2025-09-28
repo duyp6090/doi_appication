@@ -2,6 +2,7 @@ package com.duydev.backend.util;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +52,30 @@ public class CloudinaryUtil {
         }
 
         return response;
+    }
+
+    public void deletionResource(List<String> publicIds, Map<String, Object> options){
+        try {
+            cloudinary.api().deleteResources(publicIds, options); 
+        } catch (Exception e) {
+            log.error("Error when delete resource from cloudinary: {}", e.getMessage());
+            throw new AppException(EnumException.DELETE_FILE_ERROR);
+        }
+    }
+
+    public Map<String, Object> reBulkUpload(List<MultipartFile> files, List<String> publictIds){
+        Map<String, Object> results = new HashMap<>();
+        try {
+            // Delete old files from cloudinary
+            for(int i = 0; i < publictIds.size(); i++){
+                String publicId = publictIds.get(i);
+                Map<String, Object> uploadResult = cloudinary.uploader().upload(files.get(i), Map.of("public_id", publicId, "overwrite", true));
+                results.put(files.get(i).getOriginalFilename(), uploadResult);
+            }
+        } catch (Exception e) {
+            log.error("Error when re-upload file to cloudinary: {}", e.getMessage());
+            throw new AppException(EnumException.UPLOAD_FILE_ERROR);
+        }
+        return results;
     }
 }
