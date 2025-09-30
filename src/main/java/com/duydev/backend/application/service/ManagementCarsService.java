@@ -1,5 +1,6 @@
 package com.duydev.backend.application.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class ManagementCarsService implements IManagementCarsService {
             Map<String, Object> results = cloudinaryUtil.bulkUpload(requestCreateCarDto.getImages(), options);
 
             // 3. Create Json string to save public_id and url for each image
-            Map<String, String> images = Map.of();
+            Map<String, String> images = new HashMap<>();
             for(Map.Entry<String, Object> entry : results.entrySet()){
                 Map<String, Object> imageInfo = (Map<String, Object>) entry.getValue();
                 String publicId = (String) imageInfo.get("public_id");

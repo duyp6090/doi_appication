@@ -1,5 +1,5 @@
 -- Create type enum users 
-CREATE TYPE user_role AS ENUM ('ADMIN', 'CUSTOMER', 'MODERATOR');
+CREATE TYPE user_role AS ENUM ('ADMIN', 'CUSTOMER', 'OWNER');
 
 CREATE TYPE user_status AS ENUM('ACTIVE', 'INACTIVE', 'BANNED');
 
@@ -114,7 +114,7 @@ CREATE TABLE tbl_cars (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     owner_id BIGINT NOT NULL,
-    make VARCHAR(50) NOT NULL,
+    brand VARCHAR(50) NOT NULL,
     model VARCHAR(50) NOT NULL,
     year INT NOT NULL,
     license_plate VARCHAR(20) UNIQUE NOT NULL,

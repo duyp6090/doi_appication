@@ -2,6 +2,8 @@ package com.duydev.backend.domain.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.ColumnTransformer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -43,5 +45,6 @@ public class CarsEntity extends AbstractEntity<Long>{
     Long locationId;
 
     @Column(name = "images", columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private String images;
 }

@@ -44,13 +44,14 @@ public class CloudinaryUtil {
                 file.transferTo(targetPath);
 
                 // Upload file to cloudinary
-                Map<String, Object> response = cloudinary.uploader().upload(file, options);
+                Map<String, Object> response = cloudinary.uploader().upload(file.getBytes(), options);
                 results.put(nameFile, response);
 
                 // Delete image from folder assets
                 Files.delete(targetPath);
             }
         } catch (Exception e) {
+            log.error("Error when upload file to cloudinary: {}", e.getMessage());
             throw new AppException(EnumException.UPLOAD_FILE_ERROR);
         }
 
@@ -73,7 +74,7 @@ public class CloudinaryUtil {
             for(int i = 0; i < publictIds.size(); i++){
                 String publicId = publictIds.get(i);
                 MultipartFile file = files.get(i);
-                Map<String, Object> uploadResult = cloudinary.uploader().upload(file, Map.of("public_id", publicId, "overwrite", true));
+                Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), Map.of("public_id", publicId, "overwrite", true));
                 results.put(file.getOriginalFilename(), uploadResult);
             }
         } catch (Exception e) {
