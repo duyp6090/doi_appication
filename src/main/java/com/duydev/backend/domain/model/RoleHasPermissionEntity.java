@@ -1,6 +1,9 @@
 package com.duydev.backend.domain.model;
 
 import jakarta.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
@@ -20,9 +23,11 @@ import lombok.Setter;
 public class RoleHasPermissionEntity extends AbstractEntity<Integer>{
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @JsonBackReference
     private RoleEntity role;
 
     @ManyToOne
     @JoinColumn(name = "permission_id", referencedColumnName = "id")
+    @JsonBackReference
     private PermissionEntity permission;
 }

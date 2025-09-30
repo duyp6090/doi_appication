@@ -2,6 +2,8 @@ package com.duydev.backend.domain.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -24,9 +26,11 @@ public class RoleEntity extends AbstractEntity<Integer> {
     private String name;
 
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference
     private Set<RoleHasPermissionEntity> roleHasPermissions;
 
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference
     private Set<UserHasRoleEntity> userHasRoles;
 }
  

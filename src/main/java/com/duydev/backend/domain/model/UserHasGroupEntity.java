@@ -1,5 +1,7 @@
 package com.duydev.backend.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,9 +22,11 @@ import lombok.Setter;
 public class UserHasGroupEntity extends AbstractEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @JsonBackReference
     private GroupEntity group;
 }

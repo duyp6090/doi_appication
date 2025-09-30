@@ -2,6 +2,8 @@ package com.duydev.backend.domain.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -22,5 +24,6 @@ public class PermissionEntity extends AbstractEntity<Integer>{
     private String name;    
 
     @OneToMany(mappedBy = "permission")
+    @JsonManagedReference
     private Set<RoleHasPermissionEntity> roleHasPermissions;
 }

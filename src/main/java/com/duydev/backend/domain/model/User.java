@@ -14,11 +14,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.duydev.backend.domain.enums.StatusUser;
 import com.duydev.backend.domain.enums.TypeUser;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -61,9 +63,11 @@ public class User extends AbstractEntity<Long> implements UserDetails  {
     private StatusUser statusUser;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private Set<UserHasGroupEntity> userHasGroups;
     
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<UserHasRoleEntity> userHasRoles;
 
     @Override

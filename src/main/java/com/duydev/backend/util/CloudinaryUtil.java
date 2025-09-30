@@ -26,7 +26,7 @@ public class CloudinaryUtil {
     private static final String FOLDER_PATH = "assets/";
 
     public Map<String, Object> bulkUpload(List<MultipartFile> files, Map<String, Object> options){
-        Map<String, Object> response = null;
+        Map<String, Object> results = new HashMap<>();
         try {
             // Create folder assets if not exist then save image to folder assets in resources
             Path folder = Path.of(FOLDER_PATH);
@@ -44,14 +44,17 @@ public class CloudinaryUtil {
                 file.transferTo(targetPath);
 
                 // Upload file to cloudinary
-                response = cloudinary.uploader().upload(file, options);
+                Map<String, Object> response = cloudinary.uploader().upload(file, options);
+                results.put(nameFile, response);
+
+                // Delete image from folder assets
                 Files.delete(targetPath);
             }
         } catch (Exception e) {
             throw new AppException(EnumException.UPLOAD_FILE_ERROR);
         }
 
-        return response;
+        return results;
     }
 
     public void deletionResource(List<String> publicIds, Map<String, Object> options){
@@ -69,8 +72,9 @@ public class CloudinaryUtil {
             // Delete old files from cloudinary
             for(int i = 0; i < publictIds.size(); i++){
                 String publicId = publictIds.get(i);
-                Map<String, Object> uploadResult = cloudinary.uploader().upload(files.get(i), Map.of("public_id", publicId, "overwrite", true));
-                results.put(files.get(i).getOriginalFilename(), uploadResult);
+                MultipartFile file = files.get(i);
+                Map<String, Object> uploadResult = cloudinary.uploader().upload(file, Map.of("public_id", publicId, "overwrite", true));
+                results.put(file.getOriginalFilename(), uploadResult);
             }
         } catch (Exception e) {
             log.error("Error when re-upload file to cloudinary: {}", e.getMessage());
