@@ -30,16 +30,17 @@ public class ManagementCarsService implements IManagementCarsService {
             // Step By Step
             // 1. Create options to upload file
             Map<String, Object> options = Map.of(
-                "upload_preset", "save-img"
+                "upload_preset", "save-img",
+                "quality", "auto",
+                "fetch_format", "auto"
             );
 
             // 2. Upload file to cloudinary
-            Map<String, Object> results = cloudinaryUtil.bulkUpload(requestCreateCarDto.getImages(), options);
+            List<Map<String, Object>> results = cloudinaryUtil.bulkUpload(requestCreateCarDto.getImages(), options);
 
             // 3. Create Json string to save public_id and url for each image
             Map<String, String> images = new HashMap<>();
-            for(Map.Entry<String, Object> entry : results.entrySet()){
-                Map<String, Object> imageInfo = (Map<String, Object>) entry.getValue();
+            for(Map<String, Object> imageInfo : results){
                 String publicId = (String) imageInfo.get("public_id");
                 String url = (String) imageInfo.get("secure_url");
 

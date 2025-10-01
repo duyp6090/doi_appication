@@ -1,10 +1,10 @@
 package com.duydev.backend.util;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,32 +23,35 @@ public class CloudinaryUtil {
 
     private final Cloudinary cloudinary;
 
+    private final CloudinaryAsyncUtil cloudinaryAsyncUtil;
+
     private static final String FOLDER_PATH = "assets/";
 
-    public Map<String, Object> bulkUpload(List<MultipartFile> files, Map<String, Object> options){
-        Map<String, Object> results = new HashMap<>();
+    public List<Map<String, Object>> bulkUpload(List<MultipartFile> files, Map<String, Object> options) {
+        List<Map<String, Object>> results = new ArrayList<>();
+        List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
         try {
-            // Create folder assets if not exist then save image to folder assets in resources
+            // Create folder assets if not exist then save image to folder assets in
+            // resources
             Path folder = Path.of(FOLDER_PATH);
             if (!folder.toFile().exists()) {
                 folder.toFile().mkdirs();
             }
-            
+
             // From file that was saved into folder
-            for(MultipartFile file : files){
-                String nameFile =  file.getOriginalFilename();
+            for (MultipartFile file : files) {
+                CompletableFuture<Map<String, Object>> responseUpload = cloudinaryAsyncUtil.asyncUpload(file, options);
+                futures.add(responseUpload);
+            }
 
-                // Define target path to save file
-                Path targetPath = folder.resolve(nameFile);
+            // Wait for all uploads to complete
+            CompletableFuture<Void> allResultUpload = CompletableFuture
+                    .allOf(futures.toArray(new CompletableFuture[0]));
+            allResultUpload.join();
 
-                file.transferTo(targetPath);
-
-                // Upload file to cloudinary
-                Map<String, Object> response = cloudinary.uploader().upload(file.getBytes(), options);
-                results.put(nameFile, response);
-
-                // Delete image from folder assets
-                Files.delete(targetPath);
+            // Collect results
+            for (CompletableFuture<Map<String, Object>> future : futures) {
+                results.add(future.join());
             }
         } catch (Exception e) {
             log.error("Error when upload file to cloudinary: {}", e.getMessage());
@@ -58,24 +61,37 @@ public class CloudinaryUtil {
         return results;
     }
 
-    public void deletionResource(List<String> publicIds, Map<String, Object> options){
+    public void deletionResource(List<String> publicIds, Map<String, Object> options) {
         try {
-            cloudinary.api().deleteResources(publicIds, options); 
+            cloudinary.api().deleteResources(publicIds, options);
         } catch (Exception e) {
             log.error("Error when delete resource from cloudinary: {}", e.getMessage());
             throw new AppException(EnumException.DELETE_FILE_ERROR);
         }
     }
 
-    public Map<String, Object> reBulkUpload(List<MultipartFile> files, List<String> publictIds){
-        Map<String, Object> results = new HashMap<>();
+    public List<Map<String, Object>> reBulkUpload(List<MultipartFile> files, List<String> publictIds) {
+        List<Map<String, Object>> results = new ArrayList<>();
+        List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
         try {
             // Delete old files from cloudinary
-            for(int i = 0; i < publictIds.size(); i++){
+            for (int i = 0; i < publictIds.size(); i++) {
                 String publicId = publictIds.get(i);
                 MultipartFile file = files.get(i);
-                Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), Map.of("public_id", publicId, "overwrite", true));
-                results.put(file.getOriginalFilename(), uploadResult);
+                CompletableFuture<Map<String, Object>> responseUpload = cloudinaryAsyncUtil.asyncUpload(file,
+                        Map.of("public_id", publicId,
+                                "overwrite", true));
+                futures.add(responseUpload);
+
+                // Wait for all uploads to complete
+                CompletableFuture<Void> allResultsUpload = CompletableFuture
+                        .allOf(futures.toArray(new CompletableFuture[0]));
+                allResultsUpload.join();
+
+                // Collect results
+                for (CompletableFuture<Map<String, Object>> future : futures) {
+                    results.add(future.join());
+                }
             }
         } catch (Exception e) {
             log.error("Error when re-upload file to cloudinary: {}", e.getMessage());
