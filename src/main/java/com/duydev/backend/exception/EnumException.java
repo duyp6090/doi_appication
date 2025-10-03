@@ -14,6 +14,9 @@ public enum EnumException {
     DELETE_FILE_ERROR(500, "Delete file error"),
     UPLOAD_FILE_ERROR(500, "Upload file error"),
 
+    // Twilio service exceptions
+    SEND_SMS_FAIL(500, "Send SMS fail"),
+
     // Define enum exception for authentication/authorization
     TOKEN_IN_VALID(400, "Token is invalid"),
     TOKEN_NOT_FOUND(404, "Token not found"),
@@ -35,7 +38,8 @@ public enum EnumException {
     IMAGES_NOT_EMPTY(400, "Images must not be empty"),
     CREATE_CAR_ERROR(500, "Create car error"),
 
-    // Define enum exception for user
+    // Define enum exception for managementing users
+
     USERNAME_EXIST(400, "Username already exists"),
     INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
