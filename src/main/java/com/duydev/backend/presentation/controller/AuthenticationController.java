@@ -14,6 +14,7 @@ import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseTokenDto;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,22 +29,24 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<ResponseTokenDto>> login(
-        @RequestBody RequestLoginDto requestLoginDto
-    ) {
+            @Valid @RequestBody RequestLoginDto requestLoginDto) {
         ResponseDto<ResponseTokenDto> response = authenticationService.login(
-            requestLoginDto.getUsername(), requestLoginDto.getPassword()
-        );
+                requestLoginDto.getUsername(), requestLoginDto.getPassword());
 
         return ResponseEntity.ok(response);
-        
+
     }
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto<String>> register(
-        @RequestBody RequestRegisterDto requestRegisterDto
-    ) {
+            @Valid @RequestBody RequestRegisterDto requestRegisterDto) {
         ResponseDto<String> response = authenticationService.register(requestRegisterDto);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestBody String entity) {
+        return entity;
     }
 
     @PostMapping("/forgot-password")

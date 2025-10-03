@@ -26,7 +26,7 @@ public class ManagementionCarsController {
 
     private final IManagementCarsService managementCarsService;
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('CREATE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('CREATE')")
     @PostMapping("/create")
     public ResponseEntity<ResponseDto<String>> createCar(@Valid @ModelAttribute RequestCreateCarDto car) {
         log.info("Creating car: {}", car);
