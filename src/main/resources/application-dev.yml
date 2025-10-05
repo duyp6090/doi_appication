@@ -38,6 +38,18 @@ spring:
     username: ${RABBITMQ_USER:user}
     password: ${RABBITMQ_PASSWORD:password}
 
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${USER_NAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   security:
     oauth2:
       client:

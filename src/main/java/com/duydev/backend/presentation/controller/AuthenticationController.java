@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
+import com.duydev.backend.presentation.dto.request.ForgotPasswordDto;
+import com.duydev.backend.presentation.dto.request.RequestChangePasswordDto;
 import com.duydev.backend.presentation.dto.request.RequestLoginDto;
 import com.duydev.backend.presentation.dto.request.RequestRegisterDto;
+import com.duydev.backend.presentation.dto.request.RequestResetPasswordDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseTokenDto;
 
@@ -45,18 +48,30 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@RequestBody String entity) {
-        return entity;
+    public ResponseEntity<ResponseDto<String>> changePassword(
+            @Valid @RequestBody RequestChangePasswordDto requestChangePassword) {
+        String username = requestChangePassword.getUsername();
+        String oldPassword = requestChangePassword.getOldPassword();
+        String newPassword = requestChangePassword.getNewPassword();
+        ResponseDto<String> response = authenticationService.changePassword(username, oldPassword, newPassword);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword() {
-        return "Forgot password successfully";
+    public void forgotPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto) {
+        String email = forgotPasswordDto.getEmail();
+        authenticationService.forgotPassword(email);
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword() {
-        return "Reset password successfully";
+    public ResponseEntity<ResponseDto<String>> resetPassword(
+            @RequestBody RequestResetPasswordDto requestResetPasswordDto) {
+        String email = requestResetPasswordDto.getEmail();
+        String newPassword = requestResetPasswordDto.getNewPassword();
+        String otp = requestResetPasswordDto.getOtp();
+
+        ResponseDto<String> response = authenticationService.resetPassword(email, otp, newPassword);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh-token")

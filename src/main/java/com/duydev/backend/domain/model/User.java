@@ -13,9 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.duydev.backend.domain.enums.StatusUser;
-import com.duydev.backend.domain.enums.TypeUser;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,7 +38,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "tbl_user")
-public class User extends AbstractEntity<Long> implements UserDetails  {
+public class User extends AbstractEntity<Long> implements UserDetails {
     @Column(name = "user_name")
     private String username;
 
@@ -53,11 +53,6 @@ public class User extends AbstractEntity<Long> implements UserDetails  {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type_user", columnDefinition = "user_role")
-    @JdbcType(value = PostgreSQLEnumJdbcType.class)
-    private TypeUser typeUser;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "status_user", columnDefinition = "user_status")
     @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private StatusUser statusUser;
@@ -65,8 +60,8 @@ public class User extends AbstractEntity<Long> implements UserDetails  {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private Set<UserHasGroupEntity> userHasGroups;
-    
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<UserHasRoleEntity> userHasRoles;
 
@@ -79,10 +74,11 @@ public class User extends AbstractEntity<Long> implements UserDetails  {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         // For each role, get list of permissions
-        for(RoleEntity role: roles){
+        for (RoleEntity role : roles) {
             String roleName = "ROLE_" + role.getName();
             authorities.add(new SimpleGrantedAuthority(roleName));
-            List<PermissionEntity> permissions = role.getRoleHasPermissions().stream().map(RoleHasPermissionEntity::getPermission).toList();
+            List<PermissionEntity> permissions = role.getRoleHasPermissions().stream()
+                    .map(RoleHasPermissionEntity::getPermission).toList();
             permissions.forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
         }
 

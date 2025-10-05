@@ -2,7 +2,7 @@
 INSERT INTO tbl_role (created_by, updated_by, role_name)
 VALUES 
   (1, 1, 'ADMIN'),
-  (1, 1, 'USER'),
+  (1, 1, 'CUSTOMER'),
   (1, 1, 'OWNER');
 
 -- Insert tbl_permission data
@@ -21,11 +21,11 @@ VALUES
   (1, 1, 'Owners Group', 'Group for owners', 3);
 
 -- Insert tbl_user data
-INSERT INTO tbl_user (created_by, updated_by, user_name, password, birth_date, email, type_user, status_user)
+INSERT INTO tbl_user (created_by, updated_by, user_name, password, birth_date, email, status_user)
 VALUES
-  (1, 1, 'admin1', '$2a$12$OEPa0SB283aEybkXpEKy9OGnBfryqKU8N.p7ZLa/vZNFWhKyOrQ2i', '1980-01-01', 'admin1@example.com', 'ADMIN', 'ACTIVE'),
-  (1, 1, 'user1', '$2a$12$nepRBzAZdwGtSTAunCJcBeXaByQ1rkNXLc6uA8hFs03osXNMJpKGK', '1990-05-10', 'user1@example.com', 'CUSTOMER', 'ACTIVE'),
-  (1, 1, 'mod1', '$2a$12$YYejdIrTgRSsCMejI6H.Ru/7KObh/wErnN8vCYQztX3HECTsAm13O', '1985-03-15', 'mod1@example.com', 'OWNER', 'ACTIVE');
+  (1, 1, 'admin1', '$2a$12$OEPa0SB283aEybkXpEKy9OGnBfryqKU8N.p7ZLa/vZNFWhKyOrQ2i', '1980-01-01', 'admin1@example.com', 'ACTIVE'),
+  (1, 1, 'user1', '$2a$12$nepRBzAZdwGtSTAunCJcBeXaByQ1rkNXLc6uA8hFs03osXNMJpKGK', '1990-05-10', 'user1@example.com', 'ACTIVE'),
+  (1, 1, 'owner1', '$2a$12$YYejdIrTgRSsCMejI6H.Ru/7KObh/wErnN8vCYQztX3HECTsAm13O', '1985-03-15', 'owner1@example.com', 'ACTIVE');
 
 -- Insert tbl_role_has_permission data
 INSERT INTO tbl_role_has_permission (created_by, updated_by, role_id, permission_id)

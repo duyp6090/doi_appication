@@ -26,12 +26,12 @@ public class TwilioUtil {
         // Create message to send
         try {
             Message message = Message.creator(
-                    new PhoneNumber(to),
-                    new PhoneNumber(twilioConfig.getPhoneNumber()),
+                    new PhoneNumber("+84363270979"),
+                    twilioConfig.getMessagingServiceSid(),
                     messageBody).create();
             log.info("Message sent to {} with SID: {}", to, message.getSid());
         } catch (Exception e) {
-            log.error("Failed to send message to {}: {}", to, e.getMessage());
+            log.info("Cause: {}", e.getMessage());
             throw new AppException(EnumException.SEND_SMS_FAIL);
         }
     }

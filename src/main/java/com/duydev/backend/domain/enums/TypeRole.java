@@ -1,6 +1,6 @@
 package com.duydev.backend.domain.enums;
 
-public enum TypeUser {
+public enum TypeRole {
     ADMIN,
     CUSTOMER,
     OWNER
