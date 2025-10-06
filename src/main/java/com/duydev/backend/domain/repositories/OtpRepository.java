@@ -9,6 +9,5 @@ import com.duydev.backend.domain.model.OtpEntity;
 
 @Repository
 public interface OtpRepository extends JpaRepository<OtpEntity, Integer> {
-    Optional<OtpEntity> findByEmail(String phone);
-
+    Optional<OtpEntity> findByEmail(String email);
 }

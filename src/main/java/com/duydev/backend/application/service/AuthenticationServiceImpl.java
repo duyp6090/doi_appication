@@ -1,6 +1,5 @@
 package com.duydev.backend.application.service;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -20,14 +19,14 @@ import org.springframework.stereotype.Service;
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
 import com.duydev.backend.domain.enums.TypeKey;
 import com.duydev.backend.domain.enums.TypeRole;
-import com.duydev.backend.domain.model.OtpEntity;
+import com.duydev.backend.domain.model.OtpEntityRedis;
 import com.duydev.backend.domain.model.RoleEntity;
-import com.duydev.backend.domain.model.TokenEntity;
+import com.duydev.backend.domain.model.TokenEntityRedis;
 import com.duydev.backend.domain.model.User;
 import com.duydev.backend.domain.model.UserHasRoleEntity;
-import com.duydev.backend.domain.repositories.OtpRepository;
+import com.duydev.backend.domain.repositories.OtpRedisRepository;
 import com.duydev.backend.domain.repositories.RoleRepository;
-import com.duydev.backend.domain.repositories.TokenRepository;
+import com.duydev.backend.domain.repositories.TokenRedisRepository;
 import com.duydev.backend.domain.repositories.UserRepository;
 import com.duydev.backend.exception.AppException;
 import com.duydev.backend.exception.EnumException;
@@ -53,13 +52,13 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private final JwtUtil jwtUtils;
 
-    private final OtpRepository otpRepository;
-
     private final UserRepository userRepository;
 
-    private final TokenRepository tokenRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
     private final RoleRepository roleRepository;
+
+    private final OtpRedisRepository otpRedisRepository;
 
     private final EmailUtil emailUtil;
 
@@ -139,19 +138,19 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         String refreshToken = jwtUtils.generateToken(TypeKey.REFRESHTOKEN, authorities, userDetails.getUsername());
 
-        // Save token to db
-        TokenEntity token = tokenRepository.findByUsername(userDetails.getUsername());
+        // Save token to Redis
+        TokenEntityRedis token = tokenRedisRepository.findByUsername(userDetails.getUsername());
         if (token != null) {
             token.setAccessToken(accessToken);
             token.setRefreshToken(refreshToken);
         } else {
-            token = TokenEntity.builder()
+            token = TokenEntityRedis.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .username(userDetails.getUsername())
                     .build();
         }
-        tokenRepository.save(token);
+        tokenRedisRepository.save(token);
 
         // Create response
         ResponseTokenDto responseTokenDto = ResponseTokenDto.builder()
@@ -178,13 +177,13 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         // Get token in db and validate
         String username = jwtUtils.extractUsername(token, TypeKey.REFRESHTOKEN);
-        TokenEntity tokenEntity = tokenRepository.findByUsername(username);
+        TokenEntityRedis tokenEntity = tokenRedisRepository.findByUsername(username);
         if (tokenEntity == null || !tokenEntity.getRefreshToken().equals(token)) {
             throw new AppException(EnumException.TOKEN_IN_VALID);
         }
 
         // Delete token in db
-        tokenRepository.deleteByUsername(username);
+        tokenRedisRepository.deleteByUsername(username);
 
         // Return success
         return ResponseDto.<String>builder()
@@ -285,20 +284,19 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         String otpCode = String.valueOf(100000 + random.nextInt(900000));
 
         // Get Otp in db
-        OtpEntity otp = otpRepository.findByEmail(email).orElse(null);
+        OtpEntityRedis otp = otpRedisRepository.findByEmail(email).orElse(null);
         if (otp != null) {
             otp.setCode(otpCode);
-            otp.setExpiredAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
         } else {
             // Save OTP to db with ttl is 5 minutes
-            otp = OtpEntity.builder()
+            otp = OtpEntityRedis.builder()
+                    .id(UUID.randomUUID().toString())
                     .email(email)
                     .code(otpCode)
-                    .expiredAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
                     .build();
         }
 
-        otpRepository.save(otp);
+        otpRedisRepository.save(otp);
 
         // Send OTP to SMS with Twilio
         emailUtil.sendEmail(email, "OTP code", "Your OTP code is: " + otp.getCode() + ". It is valid for 5 minutes.");
@@ -307,13 +305,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Override
     public ResponseDto<String> resetPassword(String email, String otp, String newPassword) {
         // Get Otp in db
-        OtpEntity otpEntity = otpRepository.findByEmail(email)
+        otpRedisRepository.findByEmailAndCode(email, otp)
                 .orElseThrow(() -> new AppException(EnumException.OTP_NOT_FOUND));
-
-        // Validate OTP
-        if (otpEntity.getExpiredAt().before(new Date())) {
-            throw new AppException(EnumException.OTP_EXPIRED);
-        }
 
         // Set new password
         User user = userRepository.findByEmail(email);
