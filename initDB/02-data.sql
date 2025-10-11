@@ -38,13 +38,13 @@ VALUES
   (1, 1, 1, 3), -- ADMIN có UPDATE
   (1, 1, 1, 4), -- ADMIN có DELETE
   (1, 1, 1, 5), -- ADMIN có MANAGE
-  (1, 1, 2, 1), -- CUSTOMER có READ
-  (1, 1, 2, 2), -- CUSTOMER có CREATE
-  (1, 1, 2, 3), -- CUSTOMER có UPDATE
-  (1, 1, 3, 1), -- OWNER có READ
-  (1, 1, 3, 2), -- OWNER có CREATE
-  (1, 1, 3, 3), -- OWNER có UPDATE
-  (1, 1, 3, 4); -- OWNER có DELETE
+  (1, 1, 3, 1), -- CUSTOMER có READ
+  (1, 1, 3, 2), -- CUSTOMER có CREATE
+  (1, 1, 3, 3), -- CUSTOMER có UPDATE
+  (1, 1, 2, 1), -- OWNER có READ
+  (1, 1, 2, 2), -- OWNER có CREATE
+  (1, 1, 2, 3), -- OWNER có UPDATE
+  (1, 1, 2, 4); -- OWNER có DELETE
 
   -- Insert tbl_user_has_group data
 INSERT INTO tbl_user_has_group (created_by, updated_by, user_id, group_id)

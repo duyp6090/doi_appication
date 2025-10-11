@@ -36,14 +36,22 @@ public enum EnumException {
     YEAR_NOT_NULL(400, "Year must not be null"),
     PRICE_PER_HOUR_NOT_NULL(400, "Price per hour must not be null"),
     LOCATION_ID_NOT_NULL(400, "Location ID must not be null"),
+    LOCATION_NOT_NULL(400, "Location must not be null"),
     IMAGES_NOT_NULL(400, "Images must not be null"),
     IMAGES_NOT_EMPTY(400, "Images must not be empty"),
     CREATE_CAR_ERROR(500, "Create car error"),
+    NAME_ADDRESS_NOT_NULL(400, "Name address must not be null"),
+    NAME_ADDRESS_NOT_BLANK(400, "Name address must not be blank"),
+    PROVINCE_NOT_NULL(400, "Province must not be null"),
+    PROVINCE_NOT_BLANK(400, "Province must not be blank"),
+    WARD_NOT_NULL(400, "Ward must not be null"),
+    WARD_NOT_BLANK(400, "Ward must not be blank"),
 
     // Denfine enum exception for management roles
     INVALID_ROLE(400, "Invalid role"),
 
     // Define enum exception for managementing accounts
+    USER_ID_NOT_NULL(400, "User ID must not be null"),
     USER_NOT_FOUND(404, "User not found"),
     USERNAME_EXIST(400, "Username already exists"),
     USERNAME_NOT_NULL(400, "Username not null"),
@@ -62,6 +70,7 @@ public enum EnumException {
     OTP_NOT_BLANK(400, "OTP not blank"),
     OTP_EXPIRED(400, "OTP expired"),
     OTP_NOT_FOUND(404, "OTP not found"),
+    USER_ALREADY_OWNER(400, "User is already an owner"),
     INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
     private int statusCode;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnTransformer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -29,7 +30,7 @@ import lombok.Setter;
 public class CarsEntity extends AbstractEntity<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User user;
 
     @Column(name = "brand")
@@ -47,7 +48,7 @@ public class CarsEntity extends AbstractEntity<Long> {
     @Column(name = "price_per_hour")
     private BigDecimal pricePerHour;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private LocationEntity location;
 

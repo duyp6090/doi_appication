@@ -23,8 +23,8 @@ public class LocationEntity extends AbstractEntity<Long> {
     @Column(name = "province")
     private String province;
 
-    @Column(name = "award")
-    private String award;
+    @Column(name = "ward")
+    private String ward;
 
     @Column(name = "latitude")
     private Double latitude;

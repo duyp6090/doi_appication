@@ -1,11 +1,7 @@
 package com.duydev.backend.presentation.dto.request;
 
 import java.math.BigDecimal;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,10 +27,8 @@ public class RequestCreateCarDto {
     @NotNull(message = "PRICE_PER_HOUR_NOT_NULL")
     BigDecimal pricePerHour;
 
-    @NotNull(message = "LOCATION_ID_NOT_NULL")
-    Long locationId;
+    @Valid
+    @NotNull(message = "LOCATION_NOT_NULL")
+    RequestLocationDto location;
 
-    @NotNull(message = "IMAGES_NOT_NULL")
-    @NotEmpty(message = "IMAGES_NOT_EMPTY")
-    List<MultipartFile> images;
 }

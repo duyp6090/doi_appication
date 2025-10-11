@@ -88,10 +88,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         newUser = userRepository.save(newUser);
         TypeRole typeRole = requestRegisterDto.getTypeUser();
         log.info("Type role: {}", newUser.getUserHasRoles());
-        RoleEntity role = roleRepository.findByName(typeRole);
-        if (role == null) {
-            throw new AppException(EnumException.INVALID_ROLE);
-        }
+        RoleEntity role = roleRepository.findByName(typeRole)
+                .orElseThrow(() -> new AppException(EnumException.INVALID_ROLE));
 
         UserHasRoleEntity userHasRole = UserHasRoleEntity.builder()
                 .user(newUser)

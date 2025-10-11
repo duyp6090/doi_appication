@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class RoleEntity extends AbstractEntity<Integer> {
     @Enumerated(EnumType.STRING)
     private TypeRole name;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<RoleHasPermissionEntity> roleHasPermissions;
 
