@@ -65,6 +65,14 @@ public class User extends AbstractEntity<Long> implements UserDetails {
     @JsonManagedReference
     private Set<UserHasRoleEntity> userHasRoles;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<CarsEntity> cars;
+
+    @OneToMany(mappedBy = "customer")
+    @JsonManagedReference
+    private List<BookingEntity> bookings;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Get list of roles

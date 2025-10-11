@@ -1,11 +1,16 @@
 package com.duydev.backend.domain.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnTransformer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -21,30 +26,35 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "tbl_cars")
-public class CarsEntity extends AbstractEntity<Long>{
+public class CarsEntity extends AbstractEntity<Long> {
 
-    @Column(name = "owner_id")
-    Long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Column(name = "brand")
-    String brand;
+    private String brand;
 
     @Column(name = "model")
-    String model;
+    private String model;
 
     @Column(name = "license_plate")
-    String licensePlate;
+    private String licensePlate;
 
     @Column(name = "year")
-    Integer year;
+    private Integer year;
 
     @Column(name = "price_per_hour")
-    BigDecimal pricePerHour;
+    private BigDecimal pricePerHour;
 
-    @Column(name = "location_id")
-    Long locationId;
+    @OneToOne
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private LocationEntity location;
 
     @Column(name = "images", columnDefinition = "jsonb")
     @ColumnTransformer(write = "?::jsonb")
     private String images;
+
+    @OneToMany(mappedBy = "car")
+    private List<BookingEntity> bookings;
 }
