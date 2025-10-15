@@ -37,7 +37,7 @@ public class CloudinaryAsyncUtil {
             }
 
             // From file that was saved into folder
-            String nameFile = file.getOriginalFilename();
+            String nameFile = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
 
             // Define target path to save file
             Path targetPath = folder.resolve(nameFile);

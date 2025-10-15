@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class RequestUpdateOwnerDto {
     @NotNull(message = "USER_ID_NOT_NULL")
-    Long userId;
+    private Long userId;
 
     @EnumPattern(enumClass = TypeRole.class, message = "INVALID_TYPE_USER")
-    TypeRole typeRole = TypeRole.OWNER;
+    private TypeRole typeRole = TypeRole.OWNER;
 }

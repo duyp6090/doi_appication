@@ -10,13 +10,13 @@ import lombok.Setter;
 public class RequestChangePasswordDto {
     @NotNull(message = "USERNAME_NOT_NULL")
     @NotBlank(message = "USERNAME_NOT_BLANK")
-    String username;
+    private String username;
 
     @NotNull(message = "OLDPASSWORD_NOT_NULL")
     @NotBlank(message = "OLDPASSWORD_NOT_BLANK")
-    String oldPassword;
+    private String oldPassword;
 
     @NotNull(message = "NEWPASSWORD_NOT_NULL")
     @NotBlank(message = "NEWPASSWORD_NOT_BLANK")
-    String newPassword;
+    private String newPassword;
 }

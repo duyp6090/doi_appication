@@ -47,10 +47,17 @@ public enum EnumException {
     WARD_NOT_NULL(400, "Ward must not be null"),
     WARD_NOT_BLANK(400, "Ward must not be blank"),
 
-    // Denfine enum exception for management roles
+    // Define enum exception for rent cars
+    START_TIME_NOT_NULL(400, "Start time must not be null"),
+    END_TIME_NOT_NULL(400, "End time must not be null"),
+    LIMIT_MIN_PAGE_1(400, "Limit min page is 1"),
+    LIMIT_MIN_SIZE_1(400, "Limit min size is 1"),
+    SORT_BY_INVALID(400, "Sort by is invalid"),
+
+    // Denfine enum exception for management Roles & Accounts
     INVALID_ROLE(400, "Invalid role"),
 
-    // Define enum exception for managementing accounts
+    // Define enum exception for managementing Account
     USER_ID_NOT_NULL(400, "User ID must not be null"),
     USER_NOT_FOUND(404, "User not found"),
     USERNAME_EXIST(400, "Username already exists"),

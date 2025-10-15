@@ -11,7 +11,7 @@ services:
     networks:
       - backend-network
   db:
-    image: postgres:latest
+    image: postgis/postgis:latest
     container_name: postgres
     hostname: postgres
     restart: always

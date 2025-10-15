@@ -10,25 +10,25 @@ import lombok.Setter;
 @Setter
 public class RequestCreateCarDto {
     @NotNull(message = "OWNER_ID_NOT_NULL")
-    Long ownerId;
+    private Long ownerId;
 
     @NotNull(message = "BRAND_NOT_NULL")
-    String brand;
+    private String brand;
 
     @NotNull(message = "MODEL_NOT_NULL")
-    String model;
+    private String model;
 
     @NotNull(message = "LICENSE_PLATE_NOT_NULL")
-    String licensePlate;
+    private String licensePlate;
 
     @NotNull(message = "YEAR_NOT_NULL")
-    Integer year;
+    private Integer year;
 
     @NotNull(message = "PRICE_PER_HOUR_NOT_NULL")
-    BigDecimal pricePerHour;
+    private BigDecimal pricePerHour;
 
     @Valid
     @NotNull(message = "LOCATION_NOT_NULL")
-    RequestLocationDto location;
+    private RequestLocationDto location;
 
 }
