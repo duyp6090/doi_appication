@@ -1,5 +1,7 @@
 package com.duydev.backend.domain.repositories;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,54 +9,87 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.duydev.backend.application.mapper.CarsResponseProjection;
 import com.duydev.backend.domain.model.CarsEntity;
-import com.duydev.backend.presentation.dto.request.RequestGetCarsDto;
-import com.duydev.backend.presentation.dto.response.CarsResponseDto;
 
 @Repository
 public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
-    @Query("""
-                SELECT NEW com.duydev.backend.presentation.dto.response.CarsResponseDto(
-                    c.id,
-                    c.brand,
-                    c.model,
-                    c.year,
-                    c.pricePerHour,
-                    CASE
-                        WHEN loc.longitude IS NOT NULL AND loc.latitude IS NOT NULL
-                            AND :#{#requestGetCarsDto.getLongitude()} IS NOT NULL
-                            AND :#{#requestGetCarsDto.getLatitude()} IS NOT NULL
-                        THEN CAST(
-                                FUNCTION('ST_DistanceSphere',
-                                    FUNCTION('ST_MakePoint', loc.longitude, loc.latitude),
-                                    FUNCTION('ST_MakePoint', :#{#requestGetCarsDto.getLongitude()}, :#{#requestGetCarsDto.getLatitude()}))
-                                AS double
+    @Query(value = """
+            SELECT
+                c.id AS id,
+                c.brand AS brand,
+                c.model AS model,
+                c.year AS year,
+                c.price_per_hour AS pricePerHour,
+                CASE
+                    WHEN loc.longitude IS NOT NULL AND loc.latitude IS NOT NULL
+                        AND :longitude IS NOT NULL
+                        AND :latitude IS NOT NULL
+                    THEN ST_DistanceSphere(
+                        ST_MakePoint(loc.longitude::double precision, loc.latitude::double precision),
+                        ST_MakePoint((:longitude)::double precision, (:latitude)::double precision)
+                    )
+                    ELSE 0.0
+                END AS distance
+            FROM tbl_cars c
+            LEFT JOIN tbl_locations loc ON c.location_id = loc.id
+            LEFT JOIN tbl_bookings b ON b.car_id = c.id
+            WHERE (:brand IS NULL OR LOWER(c.brand) LIKE LOWER(CONCAT('%', :brand, '%')))
+            AND (:year IS NULL OR c.year = :year)
+            AND (:province IS NULL OR LOWER(loc.province) LIKE LOWER(CONCAT('%', :province, '%')))
+            AND (:ward IS NULL OR LOWER(loc.ward) LIKE LOWER(CONCAT('%', :ward, '%')))
+            AND (:minPrice IS NULL OR c.price_per_hour >= :minPrice)
+            AND (:maxPrice IS NULL OR c.price_per_hour <= :maxPrice)
+            AND (b.id IS NULL OR b.end_time >= :startTime)
+            GROUP BY c.id, c.brand, c.model, c.year, c.price_per_hour, loc.longitude, loc.latitude
+            HAVING SUM(
+                CASE
+                    WHEN (
+                        b.id IS NOT NULL
+                        AND b.start_time <= :endTime
+                        AND b.end_time >= :startTime
+                    )
+                    THEN 1
+                    ELSE 0
+                END
+            ) = 0
+            """, countQuery = """
+                SELECT COUNT(*) FROM (
+                    SELECT c.id
+                    FROM tbl_cars c
+                    LEFT JOIN tbl_locations loc ON c.location_id = loc.id
+                    LEFT JOIN tbl_bookings b ON b.car_id = c.id
+                    WHERE (:brand IS NULL OR LOWER(c.brand) LIKE LOWER(CONCAT('%', :brand, '%')))
+                    AND (:year IS NULL OR c.year = :year)
+                    AND (:province IS NULL OR LOWER(loc.province) LIKE LOWER(CONCAT('%', :province, '%')))
+                    AND (:ward IS NULL OR LOWER(loc.ward) LIKE LOWER(CONCAT('%', :ward, '%')))
+                    AND (:minPrice IS NULL OR c.price_per_hour >= :minPrice)
+                    AND (:maxPrice IS NULL OR c.price_per_hour <= :maxPrice)
+                    AND (b.id IS NULL OR b.end_time >= :startTime)
+                    GROUP BY c.id, c.brand, c.model, c.year, c.price_per_hour, loc.longitude, loc.latitude
+                    HAVING SUM(
+                        CASE
+                            WHEN (
+                                b.id IS NOT NULL
+                                AND b.start_time <= :endTime
+                                AND b.end_time >= :startTime
                             )
-                        ELSE 0.0
-                    END
-                )
-                FROM CarsEntity c
-                LEFT JOIN c.location loc
-                LEFT JOIN c.bookings b
-                WHERE (:#{#requestGetCarsDto.getBrand()} IS NULL OR c.brand = :#{#requestGetCarsDto.getBrand()})
-                  AND (:#{#requestGetCarsDto.getYear()} IS NULL OR c.year = :#{#requestGetCarsDto.getYear()})
-                  AND (:#{#requestGetCarsDto.getProvince()} IS NULL OR loc.province = :#{#requestGetCarsDto.getProvince()})
-                  AND (:#{#requestGetCarsDto.getWard()} IS NULL OR loc.ward = :#{#requestGetCarsDto.getWard()})
-                  AND (:#{#requestGetCarsDto.getMinPrice()} IS NULL OR c.pricePerHour >= :#{#requestGetCarsDto.getMinPrice()})
-                  AND (:#{#requestGetCarsDto.getMaxPrice()} IS NULL OR c.pricePerHour <= :#{#requestGetCarsDto.getMaxPrice()})
-                  AND (b.endTime >= :#{#requestGetCarsDto.getStartTime()} OR b.id IS NULL)
-                GROUP BY c.id, c.brand, c.model, c.year, c.pricePerHour, loc.longitude, loc.latitude
-                HAVING SUM(
-                    CASE
-                        WHEN b.id IS NOT NULL
-                             AND b.status = 'CONFIRMED'
-                             AND b.endTime > :#{#requestGetCarsDto.getStartTime()}
-                             AND b.startTime < :#{#requestGetCarsDto.getEndTime()}
-                        THEN 1
-                        ELSE 0
-                    END
-                ) = 0
-            """)
-    public Page<CarsResponseDto> findCars(@Param("requestGetCarsDto") RequestGetCarsDto requestGetCarsDto,
+                            THEN 1
+                            ELSE 0
+                        END
+                    ) = 0
+                ) AS filtered_cars
+            """, nativeQuery = true)
+    public Page<CarsResponseProjection> findCars(
+            @Param("brand") String brand,
+            @Param("year") Integer year,
+            @Param("province") String province,
+            @Param("ward") String ward,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice,
+            @Param("longitude") Double longitude,
+            @Param("latitude") Double latitude,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
             Pageable pageable);
 }

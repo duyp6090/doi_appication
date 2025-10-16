@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.duydev.backend.application.mapper.CarsResponseProjection;
 import com.duydev.backend.application.service.interfaceservice.IRentationCarsService;
 import com.duydev.backend.domain.constant.SortConstant;
 import com.duydev.backend.domain.repositories.CarsRepository;
@@ -39,7 +40,7 @@ public class RentationCarsService implements IRentationCarsService {
         int size = request.getSize();
         List<Sort.Order> orders = new ArrayList<>();
         String sortBy = request.getSortBy();
-        if (sortBy != null) {
+        if (sortBy != null && sortBy.length() != 0) {
             String[] sortParameters = sortBy.split("\\|");
             for (String param : sortParameters) {
                 String[] fieldAndDirect = param.split(",");
@@ -56,7 +57,31 @@ public class RentationCarsService implements IRentationCarsService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
 
         // 3. Call repository
-        Page<CarsResponseDto> carsPage = carsRepository.findCars(request, pageable);
+        Page<CarsResponseProjection> carsPage = carsRepository.findCars(
+                request.getBrand(),
+                request.getYear(),
+                request.getProvince(),
+                request.getWard(),
+                request.getMinPrice(),
+                request.getMaxPrice(),
+                request.getLongitude(),
+                request.getLatitude(),
+                request.getStartTime(),
+                request.getEndTime(),
+                pageable);
+
+        // Convert to CarsResponseDto
+        List<CarsResponseDto> carsResponseDtos = new ArrayList<>();
+        for (CarsResponseProjection projection : carsPage.getContent()) {
+            CarsResponseDto dto = new CarsResponseDto(
+                    projection.getId(),
+                    projection.getBrand(),
+                    projection.getModel(),
+                    projection.getYear(),
+                    projection.getPricePerHour(),
+                    projection.getDistance());
+            carsResponseDtos.add(dto);
+        }
 
         // 4. Return response
         PaginationDto paginationDto = PaginationDto.builder()
@@ -67,12 +92,11 @@ public class RentationCarsService implements IRentationCarsService {
                 .build();
 
         return ResultPaginationDto.<List<CarsResponseDto>>builder()
-                .data(carsPage.getContent())
+                .data(carsResponseDtos)
                 .pagination(paginationDto)
                 .status(200)
                 .message(List.of("Find cars success"))
                 .build();
-
     }
 
 }
