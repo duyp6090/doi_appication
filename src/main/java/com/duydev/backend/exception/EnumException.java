@@ -46,6 +46,10 @@ public enum EnumException {
     PROVINCE_NOT_BLANK(400, "Province must not be blank"),
     WARD_NOT_NULL(400, "Ward must not be null"),
     WARD_NOT_BLANK(400, "Ward must not be blank"),
+    CAR_ID_NOT_NULL(400, "Car ID must not be null"),
+    CAR_NOT_FOUND(404, "Car not found"),
+    UPDATE_CAR_ERROR(500, "Update car error"),
+    CAR_HAS_FUTURE_BOOKING(400, "Car has future booking, cannot delete"),
 
     // Define enum exception for rent cars
     START_TIME_NOT_NULL(400, "Start time must not be null"),
