@@ -19,14 +19,14 @@ public enum EnumException {
     SEND_SMS_FAIL(500, "Send SMS fail"),
     SEND_EMAIL_FAIL(500, "Send email fail"),
 
+    // Define enum exception for login social
+    OAUTH2_CLIENT_NOT_FOUND(404, "OAuth2 client not found"),
+
     // Define enum exception for authentication/authorization
     TOKEN_IN_VALID(400, "Token is invalid"),
     TOKEN_NOT_FOUND(404, "Token not found"),
     UNAUTHORIZED(401, "Unauthorized"),
     FORBIDDEN(403, "Forbidden"),
-
-    // Define enum exception for login social
-    OAUTH2_CLIENT_NOT_FOUND(404, "OAuth2 client not found"),
 
     // Define enum exception for management cars
     OWNER_ID_NOT_NULL(400, "Owner ID must not be null"),
@@ -82,6 +82,8 @@ public enum EnumException {
     OTP_EXPIRED(400, "OTP expired"),
     OTP_NOT_FOUND(404, "OTP not found"),
     USER_ALREADY_OWNER(400, "User is already an owner"),
+    PHONE_NUMBER_INVALID(400, "Phone number is invalid"),
+    EMAIL_INVALID(400, "Email is invalid"),
     INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
     private int statusCode;

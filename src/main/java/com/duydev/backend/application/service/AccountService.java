@@ -2,6 +2,8 @@ package com.duydev.backend.application.service;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.duydev.backend.application.service.interfaceservice.IAccountService;
@@ -13,7 +15,9 @@ import com.duydev.backend.domain.repositories.RoleRepository;
 import com.duydev.backend.domain.repositories.UserRepository;
 import com.duydev.backend.exception.AppException;
 import com.duydev.backend.exception.EnumException;
+import com.duydev.backend.presentation.dto.request.RequestUpdateInformationAccount;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
+import com.duydev.backend.presentation.dto.response.ResponseUserInformationDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +60,55 @@ public class AccountService implements IAccountService {
         // 4. Return response
         return ResponseDto.<String>builder()
                 .message(List.of("Update user to owner successfully"))
+                .status(EnumException.SUCCESS.getStatusCode())
+                .build();
+    }
+
+    @Override
+    public ResponseDto<ResponseUserInformationDto> getUserInformation() {
+        // Step by step
+        // 1. From context get user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // 2. Map user to ResponseUserInformationDto
+        ResponseUserInformationDto userInfo = ResponseUserInformationDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .build();
+
+        // 3. Return response
+        return ResponseDto.<ResponseUserInformationDto>builder()
+                .data(userInfo)
+                .message(List.of("Get user information successfully"))
+                .status(200)
+                .build();
+    }
+
+    @Override
+    public ResponseDto<String> updateUserInformation(RequestUpdateInformationAccount request) {
+        // Step by step
+        // 1. From context get user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // 2. Update user information
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getPhone() != null) {
+            user.setPhone(request.getPhone());
+        }
+        if (request.getBirthDate() != null) {
+            user.setBirthDate(request.getBirthDate());
+        }
+
+        userRepository.save(user);
+        // 3. Return response
+        return ResponseDto.<String>builder()
+                .message(List.of("Update user information successfully"))
                 .status(EnumException.SUCCESS.getStatusCode())
                 .build();
     }

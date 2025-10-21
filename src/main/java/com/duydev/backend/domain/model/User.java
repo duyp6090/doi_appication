@@ -52,6 +52,9 @@ public class User extends AbstractEntity<Long> implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status_user", columnDefinition = "user_status")
     @JdbcType(value = PostgreSQLEnumJdbcType.class)
