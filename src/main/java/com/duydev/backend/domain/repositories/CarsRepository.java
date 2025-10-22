@@ -1,6 +1,7 @@
 package com.duydev.backend.domain.repositories;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -92,4 +93,17 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime,
             Pageable pageable);
+
+    @Query(value = """
+                    SELECT CASE WHEN COUNT(b) = 0 THEN true ELSE false END
+                    FROM BookingEntity b
+                    WHERE b.car.id = :carId
+                    AND b.startTime <= :endTime
+                    AND b.endTime >= :startTime
+                    AND b.status  = 'CONFIRMED'
+            """)
+    public boolean validBookingTime(
+            @Param("carId") Long carId,
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
 }

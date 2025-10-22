@@ -192,12 +192,12 @@ public class ManagementCarsService implements IManagementCarsService {
         CarsEntity car = carsRepository.findById(carId)
                 .orElseThrow(() -> new AppException(EnumException.CAR_NOT_FOUND));
         if (!car.getUser().getId().equals(ownerId)) {
-            throw new AppException(EnumException.USER_NOT_FOUND);
+            throw new AppException(EnumException.OWNER_HAS_NOT_CAR);
         }
 
         // 2. If car has booking in future with status confirmed cannot delete
         boolean hasFutureBooking = bookingRepository.existsByCarIdAndEndTimeAfterAndStatus(
-                carId, new Date(System.currentTimeMillis()), StatusBooking.CONFIRMED.name());
+                carId, new Date(System.currentTimeMillis()), StatusBooking.CONFIRMED);
         if (hasFutureBooking) {
             throw new AppException(EnumException.CAR_HAS_FUTURE_BOOKING);
         }

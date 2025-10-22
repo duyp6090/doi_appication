@@ -26,8 +26,6 @@ public class RequestUpdateCarDto {
 
     private BigDecimal pricePerHour;
 
-    private Long locationId;
-
     private String nameLocation;
 
     private String province;

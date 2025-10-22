@@ -49,7 +49,7 @@ public enum EnumException {
     CAR_ID_NOT_NULL(400, "Car ID must not be null"),
     CAR_NOT_FOUND(404, "Car not found"),
     UPDATE_CAR_ERROR(500, "Update car error"),
-    CAR_HAS_FUTURE_BOOKING(400, "Car has future booking, cannot delete"),
+    CAR_HAS_FUTURE_BOOKING(400, "Car has future booking"),
 
     // Define enum exception for rent cars
     START_TIME_NOT_NULL(400, "Start time must not be null"),
@@ -57,6 +57,13 @@ public enum EnumException {
     LIMIT_MIN_PAGE_1(400, "Limit min page is 1"),
     LIMIT_MIN_SIZE_1(400, "Limit min size is 1"),
     SORT_BY_INVALID(400, "Sort by is invalid"),
+    CUSTOMER_ID_NOT_NULL(400, "Customer ID must not be null"),
+    TOTAL_PRICE_NOT_NULL(400, "Total price must not be null"),
+    BOOKING_NOT_FOUND(404, "Booking not found"),
+    USER_HAS_NOT_CAR(400, "User has not booking this car"),
+    CAN_NOT_CANCEL_BOOKING(400, "Can not cancel booking"),
+    OWNER_HAS_NOT_CAR(400, "Owner has not car"),
+    CAN_NOT_CONFIRM_BOOKING(400, "Can not confirm booking"),
 
     // Denfine enum exception for management Roles & Accounts
     INVALID_ROLE(400, "Invalid role"),

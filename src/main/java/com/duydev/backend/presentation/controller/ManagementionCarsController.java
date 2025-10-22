@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.duydev.backend.application.service.interfaceservice.IManagementCarsService;
 import com.duydev.backend.presentation.dto.request.RequestCreateCarDto;
+import com.duydev.backend.presentation.dto.request.RequestDeleteCarDto;
 import com.duydev.backend.presentation.dto.request.RequestUpdateCarDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 
@@ -21,7 +22,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j(topic = "ManagementionCarsController")
 @RequiredArgsConstructor
@@ -43,7 +47,7 @@ public class ManagementionCarsController {
     }
 
     @PreAuthorize("hasRole('OWNER') and hasAuthority('update')")
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<ResponseDto<String>> updateCar(
             @Valid @RequestPart RequestUpdateCarDto car,
             @RequestPart("images") List<MultipartFile> images) {
@@ -53,12 +57,11 @@ public class ManagementionCarsController {
     }
 
     @PreAuthorize("hasRole('OWNER') and hasAuthority('delete')")
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto<String>> deleteCar(
-            @Valid @RequestPart Long carId,
-            @RequestPart Long ownerId) {
-        log.info("Deleting car with id: {}", carId);
-        ResponseDto<String> response = managementCarsService.deleteCar(carId, ownerId);
+            @Valid @RequestBody RequestDeleteCarDto request) {
+        log.info("Deleting car with id: {}", request.getCarId());
+        ResponseDto<String> response = managementCarsService.deleteCar(request.getCarId(), request.getOwnerId());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }
