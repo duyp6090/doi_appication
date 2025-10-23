@@ -100,10 +100,11 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                     WHERE b.car.id = :carId
                     AND b.startTime <= :endTime
                     AND b.endTime >= :startTime
-                    AND b.status  = 'CONFIRMED'
+                    AND (b.status  = 'CONFIRMED' OR (b.status = 'PENDING' AND b.customer.id = :customerId))
             """)
     public boolean validBookingTime(
             @Param("carId") Long carId,
             @Param("startTime") Date startTime,
-            @Param("endTime") Date endTime);
+            @Param("endTime") Date endTime,
+            @Param("customerId") Long customerId);
 }

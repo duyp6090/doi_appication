@@ -27,10 +27,12 @@ public class RentalDelayRequestConsumer implements IRentalDelayRequestConsumer {
         // 1. Convert message to id booking
         Long bookingId = Long.valueOf(message);
 
+        log.info("Processing timeout for booking id: {}", bookingId);
+
         // 2. Update status booking to CANCELLED
         BookingEntity booking = bookingRepository.findByIdForUpdate(bookingId)
                 .orElse(null);
-        if (booking != null && booking.getStatus().equals("PENDING")) {
+        if (booking != null && booking.getStatus() == StatusBooking.PENDING) {
             booking.setStatus(StatusBooking.CANCELLED);
             bookingRepository.save(booking);
             log.info("Booking id {} has been cancelled due to timeout.", bookingId);

@@ -64,6 +64,7 @@ public enum EnumException {
     CAN_NOT_CANCEL_BOOKING(400, "Can not cancel booking"),
     OWNER_HAS_NOT_CAR(400, "Owner has not car"),
     CAN_NOT_CONFIRM_BOOKING(400, "Can not confirm booking"),
+    BOOKING_ID_NOT_NULL(400, "Booking ID must not be null"),
 
     // Denfine enum exception for management Roles & Accounts
     INVALID_ROLE(400, "Invalid role"),

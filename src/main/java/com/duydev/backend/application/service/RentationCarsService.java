@@ -130,7 +130,8 @@ public class RentationCarsService implements IRentationCarsService {
         boolean isValidBookingTime = carsRepository.validBookingTime(
                 request.getCarId(),
                 request.getStartTime(),
-                request.getEndTime());
+                request.getEndTime(),
+                user.getId());
         if (!isValidBookingTime) {
             throw new AppException(EnumException.CAR_HAS_FUTURE_BOOKING);
         }
@@ -199,7 +200,7 @@ public class RentationCarsService implements IRentationCarsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
-        Long ownerId = booking.getCar().getId();
+        Long ownerId = booking.getCar().getUser().getId();
         if (!ownerId.equals(currentUser.getId())) {
             throw new AppException(EnumException.OWNER_HAS_NOT_CAR);
         }
@@ -209,7 +210,11 @@ public class RentationCarsService implements IRentationCarsService {
             throw new AppException(EnumException.CAN_NOT_CONFIRM_BOOKING);
         }
 
-        // 4. Canceled others booking that has status pending and overlap time
+        // 4. Set status confirmed
+        booking.setStatus(StatusBooking.CONFIRMED);
+        bookingRepository.save(booking);
+
+        // 5. Canceled others booking that has status pending and overlap time
         List<BookingEntity> bookings = bookingRepository.findBookingsOverlap(booking.getCar().getId(),
                 booking.getStartTime(), booking.getEndTime());
         for (BookingEntity b : bookings) {
