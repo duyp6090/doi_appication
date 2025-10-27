@@ -13,5 +13,7 @@ public interface CarsResponseProjection {
 
     BigDecimal getPricePerHour();
 
+    String getImages();
+
     Double getDistance();
 }

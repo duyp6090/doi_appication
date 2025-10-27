@@ -1,8 +1,5 @@
 package com.duydev.backend.presentation.dto.request;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 
@@ -14,7 +11,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RequestGetCarsDto {
+public class RequestGetListCarsDto {
+    @NotNull(message = "OWNER_ID_NOT_NULL")
+    private Long ownerId;
+
     private String brand;
     private Integer year;
     private String province;
@@ -22,19 +22,9 @@ public class RequestGetCarsDto {
 
     @JsonSetter(nulls = Nulls.SKIP)
     private Double minPrice = 0.0;
+
     @JsonSetter(nulls = Nulls.SKIP)
     private Double maxPrice = Double.MAX_VALUE;
-
-    private Double longitude;
-    private Double latitude;
-
-    @NotNull(message = "START_TIME_NOT_NULL")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime startTime;
-
-    @NotNull(message = "END_TIME_NOT_NULL")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime endTime;
 
     @Min(value = 1, message = "LIMIT_MIN_PAGE_1")
     @JsonSetter(nulls = Nulls.SKIP)

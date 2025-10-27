@@ -1,15 +1,22 @@
 package com.duydev.backend.application.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.duydev.backend.application.service.interfaceservice.IManagementCarsService;
+import com.duydev.backend.domain.constant.SortConstant;
 import com.duydev.backend.domain.enums.StatusBooking;
+import com.duydev.backend.domain.model.BookingEntity;
 import com.duydev.backend.domain.model.CarsEntity;
 import com.duydev.backend.domain.model.LocationEntity;
 import com.duydev.backend.domain.model.User;
@@ -19,9 +26,16 @@ import com.duydev.backend.domain.repositories.UserRepository;
 import com.duydev.backend.exception.AppException;
 import com.duydev.backend.exception.EnumException;
 import com.duydev.backend.presentation.dto.request.RequestCreateCarDto;
+import com.duydev.backend.presentation.dto.request.RequestGetListCarsDto;
 import com.duydev.backend.presentation.dto.request.RequestLocationDto;
 import com.duydev.backend.presentation.dto.request.RequestUpdateCarDto;
+import com.duydev.backend.presentation.dto.response.CarResponseDto;
+import com.duydev.backend.presentation.dto.response.InformationCarResponseDto;
+import com.duydev.backend.presentation.dto.response.LocationCarResponseDto;
+import com.duydev.backend.presentation.dto.response.PaginationDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
+import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
+import com.duydev.backend.presentation.dto.response.ReviewBookingResponseDto;
 import com.duydev.backend.util.CloudinaryUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -207,6 +221,110 @@ public class ManagementCarsService implements IManagementCarsService {
 
         return ResponseDto.<String>builder()
                 .message(List.of("Delete car successfully"))
+                .status(200)
+                .build();
+    }
+
+    @Override
+    public ResultPaginationDto<List<CarResponseDto>> getListCars(RequestGetListCarsDto requestGetListCarsDto) {
+        // Step by step
+        // 1. Build pageable
+        int page = requestGetListCarsDto.getPage() - 1;
+        int size = requestGetListCarsDto.getSize();
+        List<Sort.Order> orders = new ArrayList<>();
+        String sortBy = requestGetListCarsDto.getSortBy();
+        if (sortBy != null && !sortBy.isEmpty()) {
+            String[] sortParams = sortBy.split(";");
+            for (String sortParam : sortParams) {
+                String[] fieldAndDirection = sortParam.split(",");
+                if (fieldAndDirection.length == 2) {
+                    String field = fieldAndDirection[0];
+                    String direction = fieldAndDirection[1];
+                    if (!SortConstant.SORT_FIELDS_MANAGEMENT_CAR.contains(field)) {
+                        throw new AppException(EnumException.SORT_BY_INVALID);
+                    }
+                    Sort.Order order = new Sort.Order(Sort.Direction.fromString(direction), field);
+                    orders.add(order);
+                }
+            }
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
+
+        // 2. Query data
+        Page<CarsEntity> carsPage = carsRepository.findListCars(requestGetListCarsDto, pageable);
+
+        // 3. Map data to response dto
+        PaginationDto paginationDto = PaginationDto.builder()
+                .page(page + 1)
+                .size(size)
+                .totalPages(carsPage.getTotalPages())
+                .totalElements(carsPage.getTotalElements())
+                .build();
+
+        List<CarResponseDto> carResponseDtos = carsPage.getContent().stream().map(
+                (CarsEntity car) -> CarResponseDto.builder()
+                        .id(car.getId())
+                        .brand(car.getBrand())
+                        .model(car.getModel())
+                        .year(car.getYear())
+                        .pricePerHour(car.getPricePerHour())
+                        .images(car.getImages())
+                        .build())
+                .toList();
+
+        return ResultPaginationDto.<List<CarResponseDto>>builder()
+                .data(carResponseDtos)
+                .message(List.of("Get list cars successfully"))
+                .status(200)
+                .pagination(paginationDto)
+                .build();
+    }
+
+    @Override
+    public ResponseDto<InformationCarResponseDto> getInformationCar(Long carId) {
+        // Step by step
+        // 1. Find car by id
+        CarsEntity car = carsRepository.findOneCar(carId);
+        if (car == null) {
+            throw new AppException(EnumException.CAR_NOT_FOUND);
+        }
+
+        // 2. Map to response dto
+        LocationCarResponseDto locationDto = LocationCarResponseDto.builder()
+                .name(car.getLocation() != null ? car.getLocation().getName() : null)
+                .province(car.getLocation() != null ? car.getLocation().getProvince() : null)
+                .ward(car.getLocation() != null ? car.getLocation().getWard() : null)
+                .build();
+
+        List<BookingEntity> bookings = car.getBookings();
+        List<ReviewBookingResponseDto> reviews = new ArrayList<>();
+        for (BookingEntity booking : bookings) {
+            if (booking.getReview() != null) {
+                ReviewBookingResponseDto reviewDto = ReviewBookingResponseDto.builder()
+                        .id(booking.getReview().getId())
+                        .rating(booking.getReview().getRating())
+                        .comment(booking.getReview().getComment())
+                        .build();
+                reviews.add(reviewDto);
+            }
+        }
+
+        InformationCarResponseDto informationCarResponseDto = InformationCarResponseDto.builder()
+                .username(car.getUser().getUsername())
+                .phoneNumber(car.getUser().getPhone())
+                .brand(car.getBrand())
+                .model(car.getModel())
+                .licensePlate(car.getLicensePlate())
+                .year(car.getYear())
+                .pricePerHour(car.getPricePerHour())
+                .location(locationDto)
+                .images(car.getImages())
+                .reviews(reviews)
+                .build();
+
+        return ResponseDto.<InformationCarResponseDto>builder()
+                .data(informationCarResponseDto)
+                .message(List.of("Get information car successfully"))
                 .status(200)
                 .build();
     }

@@ -15,6 +15,7 @@ import com.duydev.backend.presentation.dto.response.CarsResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class RentionController {
     // Find cars
     @GetMapping("/cars")
     public ResponseEntity<ResultPaginationDto<List<CarsResponseDto>>> findCars(
-            @ModelAttribute RequestGetCarsDto request) {
+            @Valid @ModelAttribute RequestGetCarsDto request) {
         log.info("Finding cars with criteria: {}", request);
 
         ResultPaginationDto<List<CarsResponseDto>> response = rentationCarsService.findCars(request);

@@ -17,5 +17,6 @@ public class CarsResponseDto {
     String model;
     Integer year;
     BigDecimal pricePerHour;
+    String images;
     Double distance;
 }

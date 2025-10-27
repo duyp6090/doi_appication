@@ -1,19 +1,15 @@
 package com.duydev.backend.domain.model;
 
 import java.util.Date;
-import java.util.List;
-
 import com.duydev.backend.domain.enums.StatusBooking;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,7 +48,6 @@ public class BookingEntity extends AbstractEntity<Long> {
     @Enumerated(EnumType.STRING)
     private StatusBooking status;
 
-    @OneToMany(mappedBy = "booking")
-    @JsonManagedReference
-    private List<ReviewsEntity> reviews;
+    @OneToOne(mappedBy = "booking")
+    private ReviewsEntity review;
 }

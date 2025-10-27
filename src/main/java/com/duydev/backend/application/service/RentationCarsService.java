@@ -59,7 +59,7 @@ public class RentationCarsService implements IRentationCarsService {
         List<Sort.Order> orders = new ArrayList<>();
         String sortBy = request.getSortBy();
         if (sortBy != null && sortBy.length() != 0) {
-            String[] sortParameters = sortBy.split("\\|");
+            String[] sortParameters = sortBy.split(";");
             for (String param : sortParameters) {
                 String[] fieldAndDirect = param.split(",");
                 String field = fieldAndDirect[0];
@@ -97,13 +97,14 @@ public class RentationCarsService implements IRentationCarsService {
                     projection.getModel(),
                     projection.getYear(),
                     projection.getPricePerHour(),
+                    projection.getImages(),
                     projection.getDistance());
             carsResponseDtos.add(dto);
         }
 
         // 4. Return response
         PaginationDto paginationDto = PaginationDto.builder()
-                .page(page)
+                .page(page + 1)
                 .size(size)
                 .totalPages(carsPage.getTotalPages())
                 .totalElements(carsPage.getTotalElements())

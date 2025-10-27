@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.duydev.backend.application.mapper.CarsResponseProjection;
 import com.duydev.backend.domain.model.CarsEntity;
+import com.duydev.backend.presentation.dto.request.RequestGetListCarsDto;
 
 @Repository
 public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
@@ -21,6 +22,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                 c.brand AS brand,
                 c.model AS model,
                 c.year AS year,
+                c.images as images,
                 c.price_per_hour AS pricePerHour,
                 CASE
                     WHEN loc.longitude IS NOT NULL AND loc.latitude IS NOT NULL
@@ -107,4 +109,27 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             @Param("startTime") Date startTime,
             @Param("endTime") Date endTime,
             @Param("customerId") Long customerId);
+
+    @Query(value = """
+                    SELECT c
+                    FROM CarsEntity c
+                    WHERE c.user.id = :#{#request.getOwnerId()}
+                    AND (:#{#request.getBrand()} IS NULL OR LOWER(c.brand) LIKE LOWER(CONCAT('%', :#{#request.getBrand()}, '%')))
+                    AND (:#{#request.getYear()} IS NULL OR c.year = :#{#request.getYear()})
+                    AND (:#{#request.getProvince()} IS NULL OR LOWER(c.location.province) LIKE LOWER(CONCAT('%', :#{#request.getProvince()}, '%')))
+                    AND (:#{#request.getWard()} IS NULL OR LOWER(c.location.ward) LIKE LOWER(CONCAT('%', :#{#request.getWard()}, '%')))
+                    AND (:#{#request.getMinPrice()} IS NULL OR c.pricePerHour >= :#{#request.getMinPrice()})
+                    AND (:#{#request.getMaxPrice()} IS NULL OR c.pricePerHour <= :#{#request.getMaxPrice()})
+            """)
+    public Page<CarsEntity> findListCars(
+            @Param("request") RequestGetListCarsDto request,
+            Pageable pageable);
+
+    @Query(value = """
+                            SELECT c
+                            FROM CarsEntity c
+                            LEFT JOIN FETCH c.bookings b
+                            WHERE c.id = :carId
+            """)
+    public CarsEntity findOneCar(@Param("carId") Long carId);
 }
