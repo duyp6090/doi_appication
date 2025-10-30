@@ -98,7 +98,12 @@ public class RentationCarsService implements IRentationCarsService {
                     projection.getYear(),
                     projection.getPricePerHour(),
                     projection.getImages(),
-                    projection.getDistance());
+                    projection.getDistance(),
+                    projection.getLocationName(),
+                    projection.getProvince(),
+                    projection.getWard(),
+                    projection.getLongitude(),
+                    projection.getLatitude());
             carsResponseDtos.add(dto);
         }
 

@@ -16,4 +16,14 @@ public interface CarsResponseProjection {
     String getImages();
 
     Double getDistance();
+
+    String getLocationName();
+
+    String getProvince();
+
+    String getWard();
+
+    Double getLongitude();
+
+    Double getLatitude();
 }

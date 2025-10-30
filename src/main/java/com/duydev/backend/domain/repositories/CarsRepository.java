@@ -24,6 +24,11 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                 c.year AS year,
                 c.images as images,
                 c.price_per_hour AS pricePerHour,
+                loc.name AS locationName,
+                loc.province as province,
+                loc.ward as ward,
+                loc.longitude as longitude,
+                loc.latitude as latitude,
                 CASE
                     WHEN loc.longitude IS NOT NULL AND loc.latitude IS NOT NULL
                         AND :longitude IS NOT NULL
@@ -44,7 +49,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             AND (:minPrice IS NULL OR c.price_per_hour >= :minPrice)
             AND (:maxPrice IS NULL OR c.price_per_hour <= :maxPrice)
             AND (b.id IS NULL OR b.end_time >= :startTime)
-            GROUP BY c.id, c.brand, c.model, c.year, c.price_per_hour, loc.longitude, loc.latitude
+            GROUP BY c.id, c.brand, c.model, c.year, c.price_per_hour, loc.name, loc.province, loc.ward, loc.longitude, loc.latitude
             HAVING SUM(
                 CASE
                     WHEN (

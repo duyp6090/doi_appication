@@ -19,4 +19,9 @@ public class CarsResponseDto {
     BigDecimal pricePerHour;
     String images;
     Double distance;
+    String locationName;
+    String province;
+    String ward;
+    Double longitude;
+    Double latitude;
 }
