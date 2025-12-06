@@ -67,6 +67,11 @@ public enum EnumException {
     BOOKING_ID_NOT_NULL(400, "Booking ID must not be null"),
     USER_HAS_NOT_BOOKING(400, "User has not booking"),
 
+    // Define enum exception for review booking
+    RATING_NOT_NULL(400, "Rating must not be null"),
+    REVIEW_ID_NOT_NULL(400, "Review ID must not be null"),
+    REVIEW_NOT_FOUND(404, "Review not found"),
+
     // Denfine enum exception for management Roles & Accounts
     INVALID_ROLE(400, "Invalid role"),
 
