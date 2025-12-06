@@ -1,8 +1,7 @@
 package com.duydev.backend.presentation.dto.request;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 
@@ -29,14 +28,12 @@ public class RequestGetCarsDto {
     private Double latitude;
 
     @NotNull(message = "START_TIME_NOT_NULL")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 
     @NotNull(message = "END_TIME_NOT_NULL")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime endTime;
-
+    private OffsetDateTime endTime;
     @Min(value = 1, message = "LIMIT_MIN_PAGE_1")
+
     @JsonSetter(nulls = Nulls.SKIP)
     private Integer page = 1;
 

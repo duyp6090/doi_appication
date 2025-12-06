@@ -1,0 +1,19 @@
+package com.duydev.backend.presentation.dto.response;
+
+import java.util.Date;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+public class DetailBookingCarDto {
+    CarResponseDto car;
+    Date startTime;
+    Date endTime;
+    Double totalPrice;
+    String status;
+    ReviewBookingResponseDto review;
+}

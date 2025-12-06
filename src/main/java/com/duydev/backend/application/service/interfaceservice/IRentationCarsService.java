@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.duydev.backend.presentation.dto.request.RequestBookingCarDto;
 import com.duydev.backend.presentation.dto.request.RequestGetCarsDto;
+import com.duydev.backend.presentation.dto.request.RequestGetListBookingDto;
 import com.duydev.backend.presentation.dto.response.CarsResponseDto;
+import com.duydev.backend.presentation.dto.response.DetailBookingCarDto;
+import com.duydev.backend.presentation.dto.response.GetListBookingsCarDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
 
@@ -16,4 +19,8 @@ public interface IRentationCarsService {
     ResponseDto<String> cancelBookingCar(Long bookingId);
 
     ResponseDto<String> confirmBookingCar(Long bookingId);
+
+    ResponseDto<List<GetListBookingsCarDto>> getlistBookingsCar(RequestGetListBookingDto request);
+
+    ResponseDto<DetailBookingCarDto> getDetailBookingCar(Long bookingId);
 }

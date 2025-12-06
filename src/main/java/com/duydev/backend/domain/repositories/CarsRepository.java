@@ -1,6 +1,5 @@
 package com.duydev.backend.domain.repositories;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.domain.Page;
@@ -97,8 +96,8 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             @Param("maxPrice") Double maxPrice,
             @Param("longitude") Double longitude,
             @Param("latitude") Double latitude,
-            @Param("startTime") LocalDateTime startTime,
-            @Param("endTime") LocalDateTime endTime,
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime,
             Pageable pageable);
 
     @Query(value = """

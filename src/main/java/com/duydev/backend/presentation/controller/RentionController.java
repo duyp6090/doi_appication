@@ -1,17 +1,23 @@
 package com.duydev.backend.presentation.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duydev.backend.application.service.interfaceservice.IRentationCarsService;
 import com.duydev.backend.presentation.dto.request.RequestBookingCarDto;
 import com.duydev.backend.presentation.dto.request.RequestGetCarsDto;
+import com.duydev.backend.presentation.dto.request.RequestGetListBookingDto;
 import com.duydev.backend.presentation.dto.response.CarsResponseDto;
+import com.duydev.backend.presentation.dto.response.DetailBookingCarDto;
+import com.duydev.backend.presentation.dto.response.GetListBookingsCarDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
 
@@ -35,7 +41,6 @@ public class RentionController {
 
     private final IRentationCarsService rentationCarsService;
 
-    // Find cars
     @GetMapping("/cars")
     public ResponseEntity<ResultPaginationDto<List<CarsResponseDto>>> findCars(
             @Valid @ModelAttribute RequestGetCarsDto request) {
@@ -68,6 +73,29 @@ public class RentionController {
             @PathVariable @NotNull(message = "BOOKING_ID_NOT_NULL") Long bookingId) {
         log.info("Confirming booking with ID: {}", bookingId);
         ResponseDto<String> response = rentationCarsService.confirmBookingCar(bookingId);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/booking/{bookingId}/detail")
+    public ResponseEntity<ResponseDto<DetailBookingCarDto>> getBookingDetailCar(
+            @PathVariable @NotNull(message = "BOOKING_ID_NOT_NULL") Long bookingId) {
+        log.info("Getting booking detail for ID: {}", bookingId);
+        ResponseDto<DetailBookingCarDto> response = rentationCarsService.getDetailBookingCar(bookingId);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/bookings")
+    public ResponseEntity<ResponseDto<List<GetListBookingsCarDto>>> getListBookingsCar(
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime startTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime endTime) {
+        RequestGetListBookingDto request = RequestGetListBookingDto.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+        log.info("Getting list of bookings with criteria: {}", request);
+        ResponseDto<List<GetListBookingsCarDto>> response = rentationCarsService.getlistBookingsCar(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

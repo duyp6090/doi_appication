@@ -1,8 +1,9 @@
 package com.duydev.backend.domain.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Set;
 
@@ -23,8 +24,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,8 +46,7 @@ public class User extends AbstractEntity<Long> implements UserDetails {
     private String password;
 
     @Column(name = "birth_date")
-    @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "email")
     private String email;

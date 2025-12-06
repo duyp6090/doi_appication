@@ -9,10 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ReviewBookingResponseDto {
-    private Long id;
-    private Long bookingId;
-    private Double rating;
-    private String comment;
-    private Date createdAt;
+public class GetListBookingsCarDto {
+    Long bookingId;
+    CarResponseDto car;
+    Date startTime;
+    Date endTime;
+    Double totalPrice;
+    String status;
 }

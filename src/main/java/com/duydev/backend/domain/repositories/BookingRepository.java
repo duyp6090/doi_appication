@@ -33,4 +33,10 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
                         @Param("carId") Long carId,
                         @Param("startTime") Date startTime,
                         @Param("endTime") Date endTime);
+
+        List<BookingEntity> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(
+                        Date startTime,
+                        Date endTime);
+
+        Optional<BookingEntity> findById(Long id);
 }

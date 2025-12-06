@@ -2,25 +2,22 @@ package com.duydev.backend.presentation.dto.request;
 
 import java.time.OffsetDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RequestBookingCarDto {
-    @NotNull(message = "CAR_ID_NOT_NULL")
-    private Long carId;
-
-    @NotNull(message = "CUSTOMER_ID_NOT_NULL")
-    private Long customerId;
-
+@Builder
+public class RequestGetListBookingDto {
     @NotNull(message = "START_TIME_NOT_NULL")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime startTime;
 
     @NotNull(message = "END_TIME_NOT_NULL")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime endTime;
-
-    @NotNull(message = "TOTAL_PRICE_NOT_NULL")
-    private Double totalPrice;
 }
