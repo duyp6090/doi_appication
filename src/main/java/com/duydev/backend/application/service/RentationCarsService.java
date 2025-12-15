@@ -28,9 +28,11 @@ import com.duydev.backend.exception.EnumException;
 import com.duydev.backend.presentation.dto.request.RequestBookingCarDto;
 import com.duydev.backend.presentation.dto.request.RequestGetCarsDto;
 import com.duydev.backend.presentation.dto.request.RequestGetListBookingDto;
+import com.duydev.backend.presentation.dto.request.RequestGetListBookingOwnerDto;
 import com.duydev.backend.presentation.dto.response.CarResponseDto;
 import com.duydev.backend.presentation.dto.response.CarsResponseDto;
 import com.duydev.backend.presentation.dto.response.DetailBookingCarDto;
+import com.duydev.backend.presentation.dto.response.GetListBookingCarOwnerDto;
 import com.duydev.backend.presentation.dto.response.GetListBookingsCarDto;
 import com.duydev.backend.presentation.dto.response.PaginationDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
@@ -338,6 +340,53 @@ public class RentationCarsService implements IRentationCarsService {
                                 .data(detailDto)
                                 .status(200)
                                 .message(List.of("Get detail booking car success"))
+                                .build();
+        }
+
+        @Override
+        public ResponseDto<List<GetListBookingCarOwnerDto>> getListBookingCarOwner(
+                        RequestGetListBookingOwnerDto request) {
+                // Step by step to get list booking for owner
+                // 1. Get current user
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                User currentUser = (User) authentication.getPrincipal();
+                Long userId = currentUser.getId();
+
+                Date startTime = Date.from(request.getStartTime().toInstant());
+                Date endTime = Date.from(request.getEndTime().toInstant());
+
+                // 2. Get list booking
+                List<CarsEntity> cars = carsRepository.findCarsAndGetBookingsByUserId(userId, startTime, endTime);
+
+                // 3. Convert to DTO and return response
+                List<GetListBookingCarOwnerDto> bookingCarOwnerDtos = cars.stream().flatMap(
+                                (CarsEntity car) -> {
+                                        return car.getBookings().stream()
+                                                        .map((BookingEntity booking) -> {
+                                                                CarResponseDto carDto = CarResponseDto.builder()
+                                                                                .id(car.getId())
+                                                                                .brand(car.getBrand())
+                                                                                .model(car.getModel())
+                                                                                .year(car.getYear())
+                                                                                .pricePerHour(car.getPricePerHour())
+                                                                                .images(car.getImages())
+                                                                                .build();
+                                                                return GetListBookingCarOwnerDto.builder()
+                                                                                .bookingId(booking.getId())
+                                                                                .car(carDto)
+                                                                                .startTime(booking.getStartTime())
+                                                                                .endTime(booking.getEndTime())
+                                                                                .totalPrice(booking.getTotalPrice())
+                                                                                .status(booking.getStatus().name())
+                                                                                .build();
+                                                        });
+
+                                }).toList();
+
+                return ResponseDto.<List<GetListBookingCarOwnerDto>>builder()
+                                .data(bookingCarOwnerDtos)
+                                .status(200)
+                                .message(List.of("Get list booking car owner success"))
                                 .build();
         }
 

@@ -15,8 +15,10 @@ import com.duydev.backend.application.service.interfaceservice.IRentationCarsSer
 import com.duydev.backend.presentation.dto.request.RequestBookingCarDto;
 import com.duydev.backend.presentation.dto.request.RequestGetCarsDto;
 import com.duydev.backend.presentation.dto.request.RequestGetListBookingDto;
+import com.duydev.backend.presentation.dto.request.RequestGetListBookingOwnerDto;
 import com.duydev.backend.presentation.dto.response.CarsResponseDto;
 import com.duydev.backend.presentation.dto.response.DetailBookingCarDto;
+import com.duydev.backend.presentation.dto.response.GetListBookingCarOwnerDto;
 import com.duydev.backend.presentation.dto.response.GetListBookingsCarDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
@@ -96,6 +98,20 @@ public class RentionController {
                 .build();
         log.info("Getting list of bookings with criteria: {}", request);
         ResponseDto<List<GetListBookingsCarDto>> response = rentationCarsService.getlistBookingsCar(request);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/owner/bookings")
+    public ResponseEntity<ResponseDto<List<GetListBookingCarOwnerDto>>> getListBookingCarOwner(
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime startTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime endTime) {
+        RequestGetListBookingOwnerDto request = RequestGetListBookingOwnerDto.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+        log.info("Getting list of owner bookings with criteria: {}", request);
+        ResponseDto<List<GetListBookingCarOwnerDto>> response = rentationCarsService.getListBookingCarOwner(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

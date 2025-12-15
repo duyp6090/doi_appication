@@ -1,6 +1,7 @@
 package com.duydev.backend.domain.repositories;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -136,4 +137,19 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                             WHERE c.id = :carId
             """)
     public CarsEntity findOneCar(@Param("carId") Long carId);
+
+    @Query(value = """
+                SELECT c
+                FROM CarsEntity c
+                LEFT JOIN FETCH c.bookings b
+                WHERE c.user.id = :userId
+                    AND b.startTime <= :endTime
+                    AND b.endTime >= :startTime
+
+            """)
+    public List<CarsEntity> findCarsAndGetBookingsByUserId(
+            @Param("userId") Long userId,
+            @Param("startTime") Date startTime,
+            @Param("endTime") Date endTime);
+
 }
