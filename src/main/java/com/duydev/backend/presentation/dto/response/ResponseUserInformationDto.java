@@ -1,5 +1,7 @@
 package com.duydev.backend.presentation.dto.response;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +18,5 @@ public class ResponseUserInformationDto {
     private String username;
     private String email;
     private String phone;
+    private LocalDate birthDate;
 }

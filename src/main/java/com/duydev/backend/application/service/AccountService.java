@@ -77,6 +77,7 @@ public class AccountService implements IAccountService {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .phone(user.getPhone())
+                .birthDate(user.getBirthDate())
                 .build();
 
         // 3. Return response

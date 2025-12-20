@@ -131,7 +131,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             Pageable pageable);
 
     @Query(value = """
-                            SELECT c
+                            SELECT DISTINC c
                             FROM CarsEntity c
                             LEFT JOIN FETCH c.bookings b
                             WHERE c.id = :carId
@@ -139,9 +139,9 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
     public CarsEntity findOneCar(@Param("carId") Long carId);
 
     @Query(value = """
-                SELECT c
+                SELECT DISTINCT c
                 FROM CarsEntity c
-                LEFT JOIN FETCH c.bookings b
+                INNER JOIN FETCH c.bookings b
                 WHERE c.user.id = :userId
                     AND b.startTime <= :endTime
                     AND b.endTime >= :startTime

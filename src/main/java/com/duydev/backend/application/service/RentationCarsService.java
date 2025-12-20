@@ -373,6 +373,10 @@ public class RentationCarsService implements IRentationCarsService {
                                                                                 .build();
                                                                 return GetListBookingCarOwnerDto.builder()
                                                                                 .bookingId(booking.getId())
+                                                                                .customerName(booking.getCustomer()
+                                                                                                .getUsername())
+                                                                                .customerPhone(booking.getCustomer()
+                                                                                                .getPhone())
                                                                                 .car(carDto)
                                                                                 .startTime(booking.getStartTime())
                                                                                 .endTime(booking.getEndTime())

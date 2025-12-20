@@ -10,10 +10,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class GetListBookingCarOwnerDto {
-    Long bookingId;
-    CarResponseDto car;
-    Date startTime;
-    Date endTime;
-    Double totalPrice;
-    String status;
+    private Long bookingId;
+    private String customerName;
+    private String customerPhone;
+    private CarResponseDto car;
+    private Date startTime;
+    private Date endTime;
+    private Double totalPrice;
+    private String status;
 }
