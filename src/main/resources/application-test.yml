@@ -1,0 +1,78 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  devtools:
+    add-properties: true
+
+  datasource:
+    url: jdbc:postgresql://${TEST_DB_HOST:localhost}:${PORT_DB}/${TEST_DB_NAME}
+    username: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        "[format_sql]": true
+        jdbc:
+          "[time_zone]": UTC
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${PORT_REDIS:6379}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${PORT_RABBITMQ:5672}
+    username: ${RABBITMQ_USER:user}
+    password: ${RABBITMQ_PASSWORD:password}
+
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${USER_NAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${BASE_URL}/auth/google/callback
+            scope:
+              - email
+              - profile
+jwt:
+  access-key: ${JWT_ACCESS_KEY}
+  refresh-key: ${JWT_REFRESH_KEY}
+  access-expired: 7200000 #  2h
+  refresh-expired: 604800000 # 7 days
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_KEY}
+  api-secret: ${CLOUDINARY_SECRET}
+
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  phone-number: ${TWILIO_PHONE_NUMBER}

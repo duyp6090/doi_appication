@@ -47,7 +47,7 @@ public class JwtUtil {
     // Generate Token
     public String generateToken(TypeKey typeKey, List<String> authorities, String subject) {
         // Create component of token
-        int timeExpried =  typeKey == TypeKey.ACESSTOKEN ? accessExpired : refreshExpired;
+        int timeExpired =  typeKey == TypeKey.ACESSTOKEN ? accessExpired : refreshExpired;
         Key key = getKey(typeKey);
         long currentTimeMillis = System.currentTimeMillis();
         Map<String, Object> claims = new HashMap<>();
@@ -58,7 +58,7 @@ public class JwtUtil {
             .setClaims(claims)
             .setSubject(subject)
             .setIssuedAt(new Date(currentTimeMillis))
-            .setExpiration(new Date(currentTimeMillis + timeExpried))
+            .setExpiration(new Date(currentTimeMillis + timeExpired))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
     }

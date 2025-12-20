@@ -1,29 +1,9 @@
 package com.duydev.backend.application.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.stereotype.Service;
-
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
 import com.duydev.backend.domain.enums.TypeKey;
 import com.duydev.backend.domain.enums.TypeRole;
-import com.duydev.backend.domain.model.OtpEntityRedis;
-import com.duydev.backend.domain.model.RoleEntity;
-import com.duydev.backend.domain.model.TokenEntityRedis;
-import com.duydev.backend.domain.model.User;
-import com.duydev.backend.domain.model.UserHasRoleEntity;
+import com.duydev.backend.domain.model.*;
 import com.duydev.backend.domain.repositories.OtpRedisRepository;
 import com.duydev.backend.domain.repositories.RoleRepository;
 import com.duydev.backend.domain.repositories.TokenRedisRepository;
@@ -35,15 +15,29 @@ import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseTokenDto;
 import com.duydev.backend.util.EmailUtil;
 import com.duydev.backend.util.JwtUtil;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j(topic = "AUTHEN SERVICE")
+@Slf4j(topic = "AUTHENTICATION SERVICE")
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private static final Random random = new Random();
@@ -97,8 +91,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 .build();
 
         newUser.getUserHasRoles().add(userHasRole);
-
-        userRepository.save(newUser);
 
         // Return response
         return ResponseDto.<String>builder()

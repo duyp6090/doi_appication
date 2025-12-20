@@ -100,8 +100,8 @@ public enum EnumException {
     EMAIL_INVALID(400, "Email is invalid"),
     INVALID_USERNAME_PASSWORD(401, "Invalid username or password");
 
-    private int statusCode;
-    private String message;
+    private final int statusCode;
+    private final String message;
 
     EnumException(int statusCode, String message) {
         this.statusCode = statusCode;

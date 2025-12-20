@@ -1,18 +1,5 @@
 package com.duydev.backend.application.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.duydev.backend.application.service.interfaceservice.IManagementCarsService;
 import com.duydev.backend.domain.constant.SortConstant;
 import com.duydev.backend.domain.enums.StatusBooking;
@@ -29,20 +16,21 @@ import com.duydev.backend.presentation.dto.request.RequestCreateCarDto;
 import com.duydev.backend.presentation.dto.request.RequestGetListCarsDto;
 import com.duydev.backend.presentation.dto.request.RequestLocationDto;
 import com.duydev.backend.presentation.dto.request.RequestUpdateCarDto;
-import com.duydev.backend.presentation.dto.response.CarResponseDto;
-import com.duydev.backend.presentation.dto.response.InformationCarResponseDto;
-import com.duydev.backend.presentation.dto.response.LocationCarResponseDto;
-import com.duydev.backend.presentation.dto.response.PaginationDto;
-import com.duydev.backend.presentation.dto.response.ResponseDto;
-import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
-import com.duydev.backend.presentation.dto.response.ReviewBookingResponseDto;
+import com.duydev.backend.presentation.dto.response.*;
 import com.duydev.backend.util.CloudinaryUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.*;
 
 @Slf4j(topic = "ManagementCarsService")
 @Service
@@ -75,7 +63,7 @@ public class ManagementCarsService implements IManagementCarsService {
             // 2. Upload file to cloudinary
             List<Map<String, Object>> results = cloudinaryUtil.bulkUpload(images, options);
 
-            // 3. Create Json string to save public_id and url for each image
+            // 3. Create JSON string to save public_id and url for each image
             Map<String, String> imagesUpload = new HashMap<>();
             for (Map<String, Object> imageInfo : results) {
                 String publicId = (String) imageInfo.get("public_id");
@@ -262,14 +250,14 @@ public class ManagementCarsService implements IManagementCarsService {
                 .build();
 
         List<CarResponseDto> carResponseDtos = carsPage.getContent().stream().map(
-                (CarsEntity car) -> CarResponseDto.builder()
-                        .id(car.getId())
-                        .brand(car.getBrand())
-                        .model(car.getModel())
-                        .year(car.getYear())
-                        .pricePerHour(car.getPricePerHour())
-                        .images(car.getImages())
-                        .build())
+                        (CarsEntity car) -> CarResponseDto.builder()
+                                .id(car.getId())
+                                .brand(car.getBrand())
+                                .model(car.getModel())
+                                .year(car.getYear())
+                                .pricePerHour(car.getPricePerHour())
+                                .images(car.getImages())
+                                .build())
                 .toList();
 
         return ResultPaginationDto.<List<CarResponseDto>>builder()

@@ -57,7 +57,7 @@ public class GlobalExceptionHandler{
         // Init ResponseDto
         ResponseDto<Object> restResponse = new ResponseDto<>();
 
-        // Define Enumexception default
+        // Define EnumException default
         EnumException errorCode = EnumException.BAD_REQUEST;
 
         // Create map to save errors and name of EnumException

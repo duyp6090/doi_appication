@@ -1,14 +1,16 @@
 package com.duydev.backend.presentation.dto.request;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Getter
 @Setter
+@Builder
 public class RequestUpdateCarDto {
     @NotNull(message = "OWNER_ID_NOT_NULL")
     private Long ownerId;

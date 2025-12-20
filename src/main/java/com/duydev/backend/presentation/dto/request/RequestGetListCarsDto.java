@@ -2,15 +2,16 @@ package com.duydev.backend.presentation.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class RequestGetListCarsDto {
     @NotNull(message = "OWNER_ID_NOT_NULL")
     private Long ownerId;

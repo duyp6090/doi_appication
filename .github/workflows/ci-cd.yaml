@@ -67,7 +67,7 @@ jobs:
           host: ${{ secrets.STAGING_SERVER}}
           username: ${{ secrets.STAGING_USERNAME }}
           key: $${{ secrets.STAGING_SHH_KEY }}
-          source: ".env,docker-compose-staging.yaml"
+          source: ".env,docker-compose-staging.yml"
           target: ~/carhub
 
       # Deploy to server

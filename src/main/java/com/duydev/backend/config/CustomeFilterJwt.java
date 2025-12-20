@@ -50,7 +50,7 @@ public class CustomeFilterJwt extends OncePerRequestFilter {
                 boolean isvalidToken = (userDetails != null) && (!jwtUtil.isTokenExpired(token, TypeKey.ACESSTOKEN));
 
                 if(!isvalidToken){
-                    throw new BadCredentialsException("Token is invalid or expired");
+                        throw new BadCredentialsException("Token is invalid or expired");
                 }
                
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

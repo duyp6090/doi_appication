@@ -2,11 +2,13 @@ package com.duydev.backend.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class RequestLocationDto {
     @NotNull(message = "NAME_ADDRESS_NOT_NULL")
     @NotBlank(message = "NAME_ADDRESS_NOT_BLANK")

@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgis/postgis:latest
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: $TEST_DB_USER
+      POSTGRES_PASSWORD: $TEST_DB_PASSWORD
+      POSTGRES_DB: $TEST_DB_NAME
+      TZ: UTC
+    env_file:
+      - .env
+    ports:
+      - $TEST_PORT_DB:$PORT_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./initDB:/docker-entrypoint-initdb.d
+    networks:
+      - backend-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672" # RabbitMQ server
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  rabbitmq_logs:
+
+networks:
+  backend-network:
+    driver: bridge
+    name: backend-network

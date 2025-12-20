@@ -8,7 +8,6 @@ import com.duydev.backend.domain.model.User;
 import com.duydev.backend.domain.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class CustomeUserDetailsService implements UserDetailsService{
