@@ -131,7 +131,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
             Pageable pageable);
 
     @Query(value = """
-                            SELECT DISTINC c
+                            SELECT DISTINCT c
                             FROM CarsEntity c
                             LEFT JOIN FETCH c.bookings b
                             WHERE c.id = :carId
