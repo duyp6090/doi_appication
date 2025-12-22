@@ -11,4 +11,6 @@ public class LocationCarResponseDto {
     private String name;
     private String province;
     private String ward;
+    private Double latitude;
+    private Double longitude;
 }

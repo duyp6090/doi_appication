@@ -12,6 +12,8 @@ import lombok.Setter;
 public class ReviewBookingResponseDto {
     private Long id;
     private Long bookingId;
+    private Long customerId;
+    private String customerName;
     private Double rating;
     private String comment;
     private Date createdAt;

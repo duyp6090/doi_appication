@@ -294,6 +294,8 @@ public class ManagementCarsService implements IManagementCarsService {
                 .name(car.getLocation() != null ? car.getLocation().getName() : null)
                 .province(car.getLocation() != null ? car.getLocation().getProvince() : null)
                 .ward(car.getLocation() != null ? car.getLocation().getWard() : null)
+                .latitude(car.getLocation() != null ? car.getLocation().getLatitude() : null)
+                .longitude(car.getLocation() != null ? car.getLocation().getLongitude() : null)
                 .build();
 
         List<BookingEntity> bookings = car.getBookings();
@@ -302,8 +304,12 @@ public class ManagementCarsService implements IManagementCarsService {
             if (booking.getReview() != null) {
                 ReviewBookingResponseDto reviewDto = ReviewBookingResponseDto.builder()
                         .id(booking.getReview().getId())
+                        .bookingId(booking.getId())
                         .rating(booking.getReview().getRating())
                         .comment(booking.getReview().getComment())
+                        .createdAt(booking.getReview().getCreatedAt())
+                        .customerId(booking.getCustomer().getId())
+                        .customerName(booking.getCustomer().getUsername())
                         .build();
                 reviews.add(reviewDto);
             }
