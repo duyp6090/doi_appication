@@ -81,10 +81,12 @@ public class ReviewBookingServiceImpl implements IReviewBooking {
     public ResponseDto<String> deleteReviewBookingCar(Long bookingId, Long reviewId) {
         // Step by step
         // 1. Get booking by bookingId and check user has booking
-        checkUserHasBooking(bookingId);
+        BookingEntity booking = checkUserHasBooking(bookingId);
 
         // 2. Delete review booking
-        reviewBookingRepository.deleteById(reviewId);
+        booking.setReview(null);
+
+        bookingRepository.save(booking);
 
         // 3. Save changes to database
         return ResponseDto.<String>builder()

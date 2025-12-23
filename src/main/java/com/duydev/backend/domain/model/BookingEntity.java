@@ -49,6 +49,6 @@ public class BookingEntity extends AbstractEntity<Long> {
     @Enumerated(EnumType.STRING)
     private StatusBooking status;
 
-    @OneToOne(mappedBy = "booking")
+    @OneToOne(mappedBy = "booking", orphanRemoval = true)
     private ReviewsEntity review;
 }

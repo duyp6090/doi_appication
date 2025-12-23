@@ -48,8 +48,8 @@ public class ReviewBookingController {
     // Delete ReviewBooking
     @DeleteMapping("/delete/{bookingId}/{reviewId}")
     public ResponseEntity<ResponseDto<String>> deleteReviewBookingCar(
-            @PathVariable Long bookingId,
-            @PathVariable Long reviewId) {
+            @PathVariable("bookingId") Long bookingId,
+            @PathVariable("reviewId") Long reviewId) {
         log.info("Deleting review booking with bookingId: {} and reviewId: {}", bookingId, reviewId);
         ResponseDto<String> response = reviewBookingService.deleteReviewBookingCar(bookingId, reviewId);
         return ResponseEntity.status(response.getStatus()).body(response);
