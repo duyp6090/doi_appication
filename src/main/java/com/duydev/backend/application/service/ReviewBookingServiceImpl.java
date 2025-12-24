@@ -18,6 +18,7 @@ import com.duydev.backend.presentation.dto.request.RequestCreateBookingDto;
 import com.duydev.backend.presentation.dto.request.RequestUpdateBookingDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,6 +79,7 @@ public class ReviewBookingServiceImpl implements IReviewBooking {
     }
 
     @Override
+    @Transactional
     public ResponseDto<String> deleteReviewBookingCar(Long bookingId, Long reviewId) {
         // Step by step
         // 1. Get booking by bookingId and check user has booking
@@ -85,8 +87,6 @@ public class ReviewBookingServiceImpl implements IReviewBooking {
 
         // 2. Delete review booking
         booking.setReview(null);
-
-        bookingRepository.save(booking);
 
         // 3. Save changes to database
         return ResponseDto.<String>builder()
