@@ -41,14 +41,13 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                 END AS distance
             FROM tbl_cars c
             LEFT JOIN tbl_locations loc ON c.location_id = loc.id
-            LEFT JOIN tbl_bookings b ON b.car_id = c.id
+            LEFT JOIN tbl_bookings b ON b.car_id = c.id AND b.end_time >= :startTime
             WHERE (:brand IS NULL OR LOWER(c.brand) LIKE LOWER(CONCAT('%', :brand, '%')))
             AND (:year IS NULL OR c.year = :year)
             AND (:province IS NULL OR LOWER(loc.province) LIKE LOWER(CONCAT('%', :province, '%')))
             AND (:ward IS NULL OR LOWER(loc.ward) LIKE LOWER(CONCAT('%', :ward, '%')))
             AND (:minPrice IS NULL OR c.price_per_hour >= :minPrice)
             AND (:maxPrice IS NULL OR c.price_per_hour <= :maxPrice)
-            AND (b.id IS NULL OR b.end_time >= :startTime)
             GROUP BY c.id, c.brand, c.model, c.year, c.price_per_hour, loc.name, loc.province, loc.ward, loc.longitude, loc.latitude
             HAVING SUM(
                 CASE
@@ -56,6 +55,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                         b.id IS NOT NULL
                         AND b.start_time <= :endTime
                         AND b.end_time >= :startTime
+                        AND b.status != 'CONFIRMED'
                     )
                     THEN 1
                     ELSE 0
