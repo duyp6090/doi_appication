@@ -38,6 +38,7 @@ import com.duydev.backend.presentation.dto.response.PaginationDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResultPaginationDto;
 import com.duydev.backend.presentation.dto.response.ReviewBookingResponseDto;
+import com.duydev.backend.util.UserInformationUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,8 @@ public class RentationCarsService implements IRentationCarsService {
         private final BookingRepository bookingRepository;
 
         private final IRentalRequestProducer rentalRequestProducer;
+
+        private final UserInformationUtil userInformationUtil;
 
         @Override
         public ResultPaginationDto<List<CarsResponseDto>> findCars(RequestGetCarsDto request) {
@@ -258,8 +261,12 @@ public class RentationCarsService implements IRentationCarsService {
                 // 1. Get list booking car follow start and end time
                 Date startTime = Date.from(request.getStartTime().toInstant());
                 Date endTime = Date.from(request.getEndTime().toInstant());
+
+                // Get current user
+                User currentUser = userInformationUtil.getCurrentUser();
                 List<BookingEntity> bookingsEntity = bookingRepository
-                                .findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(startTime, endTime);
+                                .findByCustomer_IdAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual(
+                                                currentUser.getId(), startTime, endTime);
 
                 // 2. Convert to GetListBookingsCarDto
                 List<GetListBookingsCarDto> bookingsDto = bookingsEntity.stream().map(

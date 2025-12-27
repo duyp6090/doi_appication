@@ -34,7 +34,8 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
                         @Param("startTime") Date startTime,
                         @Param("endTime") Date endTime);
 
-        List<BookingEntity> findByStartTimeGreaterThanEqualAndEndTimeLessThanEqual(
+        List<BookingEntity> findByCustomer_IdAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual(
+                        Long customerId,
                         Date startTime,
                         Date endTime);
 
