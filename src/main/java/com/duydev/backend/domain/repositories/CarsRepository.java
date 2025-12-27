@@ -55,7 +55,7 @@ public interface CarsRepository extends JpaRepository<CarsEntity, Long> {
                         b.id IS NOT NULL
                         AND b.start_time <= :endTime
                         AND b.end_time >= :startTime
-                        AND b.status != 'CONFIRMED'
+                        AND b.status = 'CONFIRMED'
                     )
                     THEN 1
                     ELSE 0
