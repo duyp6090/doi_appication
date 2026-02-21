@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
+@DisplayName("BookingRepository Test")
 class BookingRepositoryTest {
 
     @Autowired
@@ -57,7 +58,7 @@ class BookingRepositoryTest {
                 .car(car)
                 .startTime(new Date())
                 .endTime(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000))
-                .status(StatusBooking.CONFIRMED)// +1 day
+                .status(StatusBooking.CONFIRMED)
                 .build();
         entityManager.persist(bookingEntity);
         entityManager.flush();

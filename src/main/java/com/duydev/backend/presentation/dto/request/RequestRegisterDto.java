@@ -4,12 +4,12 @@ import com.duydev.backend.domain.enums.StatusUser;
 import com.duydev.backend.domain.enums.TypeRole;
 import com.duydev.backend.util.anotation.anotationpattern.EnumPattern;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class RequestRegisterDto {
     @NotNull(message = "USERNAME_NOT_NULL")

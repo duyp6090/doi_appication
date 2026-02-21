@@ -4,7 +4,6 @@ import com.duydev.backend.application.service.CustomeUserDetailsService;
 import com.duydev.backend.application.service.interfaceservice.IManagementCarsService;
 import com.duydev.backend.config.AppConfig;
 import com.duydev.backend.exception.EnumException;
-import com.duydev.backend.presentation.controller.ManagementionCarsController;
 import com.duydev.backend.presentation.dto.request.RequestCreateCarDto;
 import com.duydev.backend.presentation.dto.request.RequestLocationDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
@@ -38,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ManagementionCarsController.class)
 @Import(AppConfig.class)
-class ManagementionCarsControllerTest {
+class ManagementCarsControllerTest {
 
     @Autowired
     MockMvc mockMvc;

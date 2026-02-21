@@ -4,7 +4,6 @@ import com.duydev.backend.application.service.CustomeUserDetailsService;
 import com.duydev.backend.application.service.interfaceservice.IAccountService;
 import com.duydev.backend.config.AppConfig;
 import com.duydev.backend.exception.EnumException;
-import com.duydev.backend.presentation.controller.ManagementionAccountController;
 import com.duydev.backend.presentation.dto.request.RequestUpdateOwnerDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.util.JwtUtil;
@@ -37,11 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementionAccountController.class)
 @Import(AppConfig.class)
 @WithMockUser(username = "duy_dev", roles = {"CUSTOMER"})
-class ManagementionAccountControllerTest {
+class ManagementAccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+   
     @Autowired
     private ObjectMapper objectMapper;
 

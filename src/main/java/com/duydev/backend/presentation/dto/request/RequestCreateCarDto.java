@@ -2,14 +2,14 @@ package com.duydev.backend.presentation.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class RequestCreateCarDto {
     @NotNull(message = "OWNER_ID_NOT_NULL")
