@@ -1,12 +1,12 @@
 package com.duydev.backend.presentation.controller;
 
-import com.duydev.backend.application.service.CustomeUserDetailsService;
 import com.duydev.backend.application.service.interfaceservice.IAccountService;
-import com.duydev.backend.config.AppConfig;
-import com.duydev.backend.exception.EnumException;
+import com.duydev.backend.domain.exception.EnumException;
+import com.duydev.backend.infrastructure.config.AppConfig;
+import com.duydev.backend.infrastructure.config.security.CustomeUserDetailsService;
+import com.duydev.backend.infrastructure.util.JwtUtil;
 import com.duydev.backend.presentation.dto.request.RequestUpdateOwnerDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
-import com.duydev.backend.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ class ManagementAccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-   
+
     @Autowired
     private ObjectMapper objectMapper;
 

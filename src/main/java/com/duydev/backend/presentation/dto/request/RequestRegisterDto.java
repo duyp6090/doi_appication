@@ -2,7 +2,7 @@ package com.duydev.backend.presentation.dto.request;
 
 import com.duydev.backend.domain.enums.StatusUser;
 import com.duydev.backend.domain.enums.TypeRole;
-import com.duydev.backend.util.anotation.anotationpattern.EnumPattern;
+import com.duydev.backend.infrastructure.util.anotation.anotationpattern.EnumPattern;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

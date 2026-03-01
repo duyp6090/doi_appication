@@ -1,13 +1,11 @@
 package com.duydev.backend.infrastructure.rabbitmq;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
-
 import com.duydev.backend.application.service.interfaceservice.IRentalRequestProducer;
-import com.duydev.backend.config.RabbitmqConfig;
-
+import com.duydev.backend.infrastructure.config.RabbitmqConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Service;
 
 @Slf4j(topic = "Rental-Request-Producer")
 @Service

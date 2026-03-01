@@ -1,17 +1,15 @@
 package com.duydev.backend.infrastructure.rabbitmq;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Service;
-
 import com.duydev.backend.application.service.interfaceservice.IRentalDelayRequestConsumer;
-import com.duydev.backend.config.RabbitmqConfig;
 import com.duydev.backend.domain.enums.StatusBooking;
 import com.duydev.backend.domain.model.BookingEntity;
 import com.duydev.backend.domain.repositories.BookingRepository;
-
+import com.duydev.backend.infrastructure.config.RabbitmqConfig;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
 
 @Slf4j(topic = "Rental-Delay-Request-Consumer")
 @Service

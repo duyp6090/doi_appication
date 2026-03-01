@@ -57,8 +57,9 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: ${BASE_URL}/auth/google/callback
+            redirect-uri: ${BASE_URL}/api/v1/auth/google/callback
             scope:
+              - openid
               - email
               - profile
 jwt:
@@ -76,3 +77,5 @@ twilio:
   account-sid: ${TWILIO_ACCOUNT_SID}
   auth-token: ${TWILIO_AUTH_TOKEN}
   phone-number: ${TWILIO_PHONE_NUMBER}
+
+

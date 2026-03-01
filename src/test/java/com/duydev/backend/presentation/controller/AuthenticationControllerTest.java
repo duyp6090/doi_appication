@@ -1,16 +1,16 @@
 package com.duydev.backend.presentation.controller;
 
-import com.duydev.backend.application.service.CustomeUserDetailsService;
 import com.duydev.backend.application.service.interfaceservice.IAuthenticationService;
-import com.duydev.backend.config.AppConfig;
-import com.duydev.backend.exception.AppException;
-import com.duydev.backend.exception.EnumException;
+import com.duydev.backend.domain.exception.AppException;
+import com.duydev.backend.domain.exception.EnumException;
+import com.duydev.backend.infrastructure.config.AppConfig;
+import com.duydev.backend.infrastructure.config.security.CustomeUserDetailsService;
+import com.duydev.backend.infrastructure.util.JwtUtil;
 import com.duydev.backend.presentation.dto.request.RequestChangePasswordDto;
 import com.duydev.backend.presentation.dto.request.RequestLoginDto;
 import com.duydev.backend.presentation.dto.request.RequestRegisterDto;
 import com.duydev.backend.presentation.dto.response.ResponseDto;
 import com.duydev.backend.presentation.dto.response.ResponseTokenDto;
-import com.duydev.backend.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterEach;
