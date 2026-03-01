@@ -25,7 +25,7 @@ services:
     hostname: redis
     restart: always
     ports:
-      - $REDIS_PORT:$PORT_REDIS
+      - $REDIS_PORT:$REDIS_PORT
     volumes:
       - redis_data:/data
     networks:

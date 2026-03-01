@@ -13,7 +13,6 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
       ddl-auto: none
@@ -78,4 +77,7 @@ twilio:
   auth-token: ${TWILIO_AUTH_TOKEN}
   phone-number: ${TWILIO_PHONE_NUMBER}
 
-
+app:
+  frontend:
+    url: ${BASE_REDIRECT_URL:http://localhost:3000}
+  base-url: ${BASE_URL:http://localhost:8080}
