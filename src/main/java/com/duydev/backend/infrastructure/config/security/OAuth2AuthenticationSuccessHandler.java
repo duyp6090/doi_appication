@@ -63,7 +63,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         tokenRedisRepository.save(token);
 
         // 4. Redirect to frontend with access token and refresh token
-        String redirectUrl = frontendUrl + "accessToken=" + accessToken + "&refreshToken=" + refreshToken;
+        String redirectUrl = frontendUrl + "/login-success?" + "accessToken=" + accessToken + "&refreshToken=" + refreshToken;
 
         response.sendRedirect(redirectUrl);
 
