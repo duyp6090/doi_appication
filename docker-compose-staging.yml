@@ -40,7 +40,7 @@ services:
     hostname: redis
     restart: always
     ports:
-      - "6379:6379"
+      - $REDIS_PORT:$PORT_REDIS
     volumes:
       - redis_data:/data
     networks:
@@ -52,17 +52,16 @@ services:
     hostname: rabbitmq
     restart: always
     ports:
-      - "5672:5672" # RabbitMQ server
-      - "15672:15672" # Management UI
+      - $RABBITMQ_PORT_SERVER:$RABBITMQ_PORT_SERVER # RabbitMQ server
+      - $RABBITMQ_PORT_UI:$RABBITMQ_PORT_UI # Management UI
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: $RABBITMQ_USER
+      RABBITMQ_DEFAULT_PASS: $RABBITMQ_PASSWORD
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - rabbitmq_logs:/var/log/rabbitmq
     networks:
       - backend-network
-
 volumes:
   postgres_data:
   redis_data:

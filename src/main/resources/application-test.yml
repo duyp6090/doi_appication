@@ -29,14 +29,14 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${PORT_REDIS:6379}
+      host: ${TEST_REDIS_HOST:localhost}
+      port: ${TEST_REDIS_PORT:6380}
 
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${PORT_RABBITMQ:5672}
-    username: ${RABBITMQ_USER:user}
-    password: ${RABBITMQ_PASSWORD:password}
+    host: ${TEST_RABBITMQ_HOST:localhost}
+    port: ${TEST_RABBITMQ_PORT_SERVER:5673}
+    username: ${TEST_RABBITMQ_USER:user}
+    password: ${TEST_RABBITMQ_PASSWORD:password}
 
   mail:
     host: ${EMAIL_HOST}
